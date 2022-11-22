@@ -40,7 +40,8 @@ void ALevelBuilderActor::BuildLevel(FString LevelName) const
 		}
 
 		ATileActor* Tile = World->SpawnActor<ATileActor>(TileLocation, TileRotation);
-		Tile->Initialize(Meshes);
+		bool IsEmpty = Placement.TileName == TEXT("Empty");
+		Tile->Initialize(Meshes, IsEmpty);
 	}
 }
 

@@ -15,10 +15,13 @@ class TOWERDEFENSE_API ATileActor : public AActor
 public:	
 	ATileActor();
 
-	void Initialize(TArray<UStaticMesh*> Meshes);
+	void Initialize(TArray<UStaticMesh*> Meshes, bool IsEmpty);
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorOnClicked(FKey ButtonPressed) override;
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere)
+	bool CanPlaceTower;
 };

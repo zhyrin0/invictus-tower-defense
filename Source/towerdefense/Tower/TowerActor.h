@@ -36,11 +36,11 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditAnywhere)
 	float RotationDegreesPerSecond;
+
+protected:
+	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Base;
