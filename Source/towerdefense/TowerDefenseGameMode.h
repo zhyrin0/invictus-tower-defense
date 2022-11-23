@@ -4,14 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "towerdefenseGameModeBase.generated.h"
+#include "TowerDefenseGameMode.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class TOWERDEFENSE_API AtowerdefenseGameModeBase : public AGameModeBase
+class TOWERDEFENSE_API ATowerDefenseGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
 };
