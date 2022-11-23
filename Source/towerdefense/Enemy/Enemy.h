@@ -13,14 +13,24 @@ class TOWERDEFENSE_API AEnemy : public AActor
 	GENERATED_BODY()
 
 public:
+	DECLARE_DELEGATE_RetVal_OneParam(FVector, FRequestNextWaypoint, FVector)
+
 	AEnemy();
 
-protected:
-	virtual void BeginPlay() override;
+	void Initialize(FVector Spawnpoint);
+	virtual void Tick(float DeltaTime) override;
 
+	FRequestNextWaypoint RequestNextWaypoint;
+
+protected:
+	void SetCurrentWaypoint(FVector NewWaypoint);
+
+	UPROPERTY(VisibleAnywhere)
+	float Speed;
+	UPROPERTY(VisibleAnywhere)
+	FVector CurrentWaypoint;
+	UPROPERTY(VisibleAnywhere)
+	FVector Direction;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Mesh;
-
-public:
-	virtual void Tick(float DeltaTime) override;
 };

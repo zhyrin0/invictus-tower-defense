@@ -18,11 +18,14 @@ public:
 	AEnemyManager();
 
 	void BeginLevel(TArray<FGridPosition> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
-	void Spawn();
 
 protected:
 	virtual void BeginPlay() override;
+	void Spawn();
+	UFUNCTION()
+	FVector OnEnemyRequestNextWaypoint(FVector Location);
 
+	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)
 	TArray<FGridPosition> Waypoints;
 	UPROPERTY(VisibleAnywhere)

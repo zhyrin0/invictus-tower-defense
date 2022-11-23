@@ -4,6 +4,7 @@
 #include "Engine/StaticMesh.h"
 
 AEnemy::AEnemy()
+	: Speed(50.0f), Direction(FVector::ZeroVector)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -14,12 +15,26 @@ AEnemy::AEnemy()
 	Mesh->SetupAttachment(RootComponent);
 }
 
-void AEnemy::BeginPlay()
+void AEnemy::Initialize(FVector Spawnpoint)
 {
-	Super::BeginPlay();
+	if (RequestNextWaypoint.IsBound()) {
+		SetCurrentWaypoint(RequestNextWaypoint.Execute(Spawnpoint));
+	}
 }
 
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	AddActorLocalOffset(Direction * Speed * DeltaTime);
+	if (GetActorLocation().Equals(CurrentWaypoint, 0.5)) {
+		if (RequestNextWaypoint.IsBound()) {
+			SetCurrentWaypoint(RequestNextWaypoint.Execute(CurrentWaypoint));
+		}
+	}
+}
+
+void AEnemy::SetCurrentWaypoint(FVector NewWaypoint)
+{
+	CurrentWaypoint = NewWaypoint;
+	Direction = (CurrentWaypoint - GetActorLocation()).GetUnsafeNormal();
 }

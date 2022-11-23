@@ -33,8 +33,9 @@ void AEnemyManager::Spawn()
 {
 	FVector SpawnLocation(Waypoints[0].XPosition, Waypoints[0].YPosition, 0.0f);
 	SpawnLocation *= 100.0f;
-	SpawnLocation.Z = 25.0f;
-	GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
+	SpawnLocation.Z = ZOffset;
+	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
+	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
 	++EnemiesRemaining;
 	--EnemiesToSpawn;
 	if (EnemiesToSpawn < 1) {
@@ -42,4 +43,20 @@ void AEnemyManager::Spawn()
 		TimerManager.PauseTimer(SpawnTimer);
 		TimerManager.ClearTimer(SpawnTimer);
 	}
+	Enemy->Initialize(SpawnLocation);
+}
+
+FVector AEnemyManager::OnEnemyRequestNextWaypoint(FVector EnemyWaypoint)
+{
+	bool IsReturnValue = false;
+	for (FGridPosition Waypoint : Waypoints) {
+		FVector CurrentWaypoint(Waypoint.XPosition * 100.0f, Waypoint.YPosition * 100.0f, ZOffset);
+		if (IsReturnValue) {
+			return CurrentWaypoint;
+		}
+		if (EnemyWaypoint.Equals(CurrentWaypoint, 0.5)) {
+			IsReturnValue = true;
+		}
+	}
+	return FVector(200.0f, 000.0f, 30.0f);
 }
