@@ -5,15 +5,13 @@
 #include "../../Tower/TowerActor.h"
 
 ATileActor::ATileActor()
-	: CanPlaceTower(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
-void ATileActor::Initialize(TArray<UStaticMesh*> Meshes, bool IsEmpty)
+void ATileActor::Initialize(TArray<UStaticMesh*> Meshes)
 {
-	CanPlaceTower = IsEmpty;
 	for (UStaticMesh* Mesh : Meshes) {
 		UStaticMeshComponent* Component = NewObject<UStaticMeshComponent>(this);
 		Component->SetupAttachment(RootComponent);
@@ -22,23 +20,18 @@ void ATileActor::Initialize(TArray<UStaticMesh*> Meshes, bool IsEmpty)
 	}
 }
 
-void ATileActor::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void ATileActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void ATileActor::NotifyActorOnClicked(FKey ButtonPressed)
 {
 	Super::NotifyActorOnClicked(ButtonPressed);
-	if (CanPlaceTower) {
-		SpawnTowerRequest.ExecuteIfBound(GetActorLocation());
-		CanPlaceTower = false;
+	if (CanPlaceTower()) {
+		SpawnTowerRequest.Execute(GetActorLocation());
+		SpawnTowerRequest.Unbind();
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Nothing happens."));
 	}
+}
+
+bool ATileActor::CanPlaceTower() const
+{
+	return SpawnTowerRequest.IsBound();
 }

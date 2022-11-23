@@ -43,9 +43,8 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(FString LevelName) const
 		}
 
 		ATileActor* Tile = World->SpawnActor<ATileActor>(TileLocation, TileRotation);
-		bool IsEmpty = Placement.TileName == EmptyTileName;
-		Tile->Initialize(Meshes, IsEmpty);
-		if (IsEmpty) {
+		Tile->Initialize(Meshes);
+		if (Placement.TileName == EmptyTileName) {
 			Result.Add(&(Tile->SpawnTowerRequest));
 		}
 	}
