@@ -26,4 +26,6 @@ void ATowerDefenseGameState::BeginLevel(FString LevelName) const
 	for (auto Request : Requests) {
 		Request->BindUObject(TowerSpawner, &ATowerSpawner::Spawn);
 	}
+	EnemyManager->BeginLevel(Descriptor->Waypoints, Descriptor->EnemyCount,
+			Descriptor->EnemySpawnDelay, Descriptor->EnemySpawnCooldown);
 }
