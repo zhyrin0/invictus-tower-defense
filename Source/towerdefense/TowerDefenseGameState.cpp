@@ -9,6 +9,7 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	UWorld* World = GetWorld();
 	LevelBuilder = World->SpawnActor<ALevelBuilderActor>();
 	LevelBuilder->BeganPlay.BindUObject(this, &ATowerDefenseGameState::BeginLevel);
+	EnemyManager = World->SpawnActor<AEnemyManager>();
 	TowerSpawner = World->SpawnActor<ATowerSpawner>();
 }
 

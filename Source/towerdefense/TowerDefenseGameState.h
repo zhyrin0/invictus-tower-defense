@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
+#include "Enemy/EnemyManager.h"
 #include "Level/LevelBuilderActor.h"
 #include "Tower/TowerSpawner.h"
 #include "TowerDefenseGameState.generated.h"
@@ -22,6 +23,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilderActor* LevelBuilder;
+	UPROPERTY(VisibleAnywhere)
+	AEnemyManager* EnemyManager;
 	UPROPERTY(VisibleAnywhere)
 	ATowerSpawner* TowerSpawner;
 };
