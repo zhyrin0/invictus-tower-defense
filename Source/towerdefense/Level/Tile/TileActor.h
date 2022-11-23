@@ -5,14 +5,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Engine/StaticMesh.h"
+#include "../../Tower/SpawnTowerRequestMixin.h"
 #include "TileActor.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API ATileActor : public AActor
+class TOWERDEFENSE_API ATileActor : public AActor, public ISpawnTowerRequestMixin
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	ATileActor();
 
 	void Initialize(TArray<UStaticMesh*> Meshes, bool IsEmpty);

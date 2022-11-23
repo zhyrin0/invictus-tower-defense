@@ -11,6 +11,7 @@ FTowerComponentConstructionData::FTowerComponentConstructionData(
 }
 
 ATowerActor::ATowerActor()
+	: RotationDegreesPerSecond(30.0f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));

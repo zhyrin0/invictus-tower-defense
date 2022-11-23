@@ -6,23 +6,26 @@
 #include "GameFramework/Actor.h"
 #include "UObject/SoftObjectPtr.h"
 #include "Tile/TileDescriptors.h"
+#include "../Tower/SpawnTowerRequestMixin.h"
 #include "LevelBuilderActor.generated.h"
 
 UCLASS()
 class TOWERDEFENSE_API ALevelBuilderActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
+	DECLARE_DELEGATE(FBeganPlay)
+
 	ALevelBuilderActor();
 
-	void BuildLevel(FString LevelName) const;
+	// note: Returns a list of spawn request delegates of the empty tiles.
+	FSpawnTowerRequestList BuildLevel(FString LevelName) const;
 
 	static constexpr int32 TILE_SIZE = 100;
+	FBeganPlay BeganPlay;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
@@ -30,7 +33,6 @@ protected:
 
 private:
 	void BuildTileMap();
-	
-	TMap<FString, TArray<TSoftObjectPtr<UStaticMesh>>> TileMap;
 
+	TMap<FString, TArray<TSoftObjectPtr<UStaticMesh>>> TileMap;
 };
