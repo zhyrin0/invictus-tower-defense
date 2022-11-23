@@ -46,17 +46,18 @@ void AEnemyManager::Spawn()
 	Enemy->Initialize(SpawnLocation);
 }
 
-FVector AEnemyManager::OnEnemyRequestNextWaypoint(FVector EnemyWaypoint)
+bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector& EnemyWaypoint)
 {
 	bool IsReturnValue = false;
 	for (FGridPosition Waypoint : Waypoints) {
 		FVector CurrentWaypoint(Waypoint.XPosition * 100.0f, Waypoint.YPosition * 100.0f, ZOffset);
 		if (IsReturnValue) {
-			return CurrentWaypoint;
+			EnemyWaypoint = CurrentWaypoint;
+			return false;
 		}
 		if (EnemyWaypoint.Equals(CurrentWaypoint, 0.5)) {
 			IsReturnValue = true;
 		}
 	}
-	return FVector(200.0f, 000.0f, 30.0f);
+	return true;
 }

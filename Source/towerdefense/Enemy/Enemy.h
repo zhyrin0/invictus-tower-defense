@@ -13,7 +13,7 @@ class TOWERDEFENSE_API AEnemy : public AActor
 	GENERATED_BODY()
 
 public:
-	DECLARE_DELEGATE_RetVal_OneParam(FVector, FRequestNextWaypoint, FVector)
+	DECLARE_DELEGATE_RetVal_OneParam(bool, FRequestNextWaypoint, FVector&)
 
 	AEnemy();
 

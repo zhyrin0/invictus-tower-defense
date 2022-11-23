@@ -22,8 +22,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	void Spawn();
+	// note: Returns true if base is reached, otherwise returns false and writes next waypoint into parameter.
 	UFUNCTION()
-	FVector OnEnemyRequestNextWaypoint(FVector Location);
+	bool OnEnemyRequestNextWaypoint(FVector& EnemyWaypoint);
 
 	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)

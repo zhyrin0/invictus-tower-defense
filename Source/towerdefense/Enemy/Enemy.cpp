@@ -18,7 +18,13 @@ AEnemy::AEnemy()
 void AEnemy::Initialize(FVector Spawnpoint)
 {
 	if (RequestNextWaypoint.IsBound()) {
-		SetCurrentWaypoint(RequestNextWaypoint.Execute(Spawnpoint));
+		FVector NextWaypoint = Spawnpoint;
+		bool BaseReached = RequestNextWaypoint.Execute(NextWaypoint);
+		if (BaseReached) {
+			Destroy();
+			return;
+		}
+		SetCurrentWaypoint(NextWaypoint);
 	}
 }
 
@@ -28,7 +34,13 @@ void AEnemy::Tick(float DeltaTime)
 	AddActorLocalOffset(Direction * Speed * DeltaTime);
 	if (GetActorLocation().Equals(CurrentWaypoint, 0.5)) {
 		if (RequestNextWaypoint.IsBound()) {
-			SetCurrentWaypoint(RequestNextWaypoint.Execute(CurrentWaypoint));
+			FVector NextWaypoint = CurrentWaypoint;
+			bool BaseReached = RequestNextWaypoint.Execute(NextWaypoint);
+			if (BaseReached) {
+				Destroy();
+				return;
+			}
+			SetCurrentWaypoint(NextWaypoint);
 		}
 	}
 }
