@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseGameState.h"
+#include "Level/LevelDescriptor.h"
 #include "Tower/SpawnTowerRequestMixin.h"
 
 void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
@@ -13,9 +14,15 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	TowerSpawner = World->SpawnActor<ATowerSpawner>();
 }
 
-void ATowerDefenseGameState::BeginLevel() const
+void ATowerDefenseGameState::BeginLevel(FString LevelName) const
 {
-	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(TEXT("TestLevel"));
+	FString Reference = FString::Printf(TEXT("LevelDescriptor'/Game/Level/%s.%s'"), *LevelName, *LevelName);
+	ULevelDescriptor* Descriptor = LoadObject<ULevelDescriptor>(NULL, *Reference, NULL, LOAD_None, NULL);
+	if (Descriptor == nullptr) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Couldn't load level."));
+		return;
+	}
+	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Descriptor->Width, Descriptor->Height, Descriptor->Tiles);
 	for (auto Request : Requests) {
 		Request->BindUObject(TowerSpawner, &ATowerSpawner::Spawn);
 	}

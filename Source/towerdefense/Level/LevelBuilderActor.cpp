@@ -3,7 +3,6 @@
 #include "LevelBuilderActor.h"
 
 #include "Engine/StaticMesh.h"
-#include "LevelDescriptor.h"
 #include "Tile/TileActor.h"
 
 ALevelBuilderActor::ALevelBuilderActor()
@@ -14,27 +13,18 @@ ALevelBuilderActor::ALevelBuilderActor()
 	TileDB = TilesAsset.Object;
 }
 
-FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(FString LevelName) const
+FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
+		int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const
 {
 	FSpawnTowerRequestList Result;
 
-	FString Reference = FString::Printf(TEXT("LevelDescriptor'/Game/Level/%s.%s'"), *LevelName, *LevelName);
-	ULevelDescriptor* Descriptor = LoadObject<ULevelDescriptor>(NULL, *Reference, NULL, LOAD_None, NULL);
-
-	if (Descriptor == nullptr && GEngine) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::White, TEXT("Couldn't load!"));
-		return Result;
-	}
-
 	FString EmptyTileName = TEXT("Empty");
 	UWorld* World = GetWorld();
-	for (FTilePlacement& Placement : Descriptor->Tiles) {
-
+	for (FTilePlacement& Placement : Tiles) {
 		FVector TileLocation(Placement.Position.XPosition, Placement.Position.YPosition, 0.0);
 		TileLocation *= TILE_SIZE;
-
 		uint8 RotationCount = static_cast<uint8>(Placement.Rotation);
-		FRotator TileRotation(0.0, 90.0 * RotationCount, 0.0);
+		FRotator TileRotation(0.0f, 90.0f * RotationCount, 0.0f);
 
 		TArray<UStaticMesh*> Meshes;
 		for (TSoftObjectPtr<UStaticMesh> MeshPtr : TileMap[Placement.TileName]) {
@@ -56,7 +46,7 @@ void ALevelBuilderActor::BeginPlay()
 {
 	Super::BeginPlay();
 	BuildTileMap();
-	BeganPlay.ExecuteIfBound();
+	BeganPlay.ExecuteIfBound(TEXT("TestLevel"));
 }
 
 void ALevelBuilderActor::BuildTileMap()

@@ -19,7 +19,7 @@ public:
 
 protected:
 	UFUNCTION()
-	void BeginLevel() const;
+	void BeginLevel(FString LevelName) const;
 
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilderActor* LevelBuilder;
