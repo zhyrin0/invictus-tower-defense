@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "UObject/ScriptInterface.h"
 #include "TowerActor.generated.h"
+
+class ITargetableMixin;
 
 USTRUCT()
 struct FTowerComponentConstructionData
@@ -35,12 +38,16 @@ public:
 	ATowerActor();
 
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void SetTarget(TScriptInterface<ITargetableMixin> NewTarget);
 
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere)
 	float RotationDegreesPerSecond;
+	UPROPERTY(VisibleAnywhere)
+	TScriptInterface<ITargetableMixin> Target;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Base;

@@ -3,6 +3,7 @@
 
 #include "TowerActor.h"
 #include "Engine/StaticMesh.h"
+#include "../Enemy/TargetableMixin.h"
 
 FTowerComponentConstructionData::FTowerComponentConstructionData(
 	UStaticMeshComponent* pComponent, USceneComponent* pParent, float pZOffset, FString pAssetPath)
@@ -31,7 +32,21 @@ void ATowerActor::BeginPlay()
 void ATowerActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	CannonBase->AddRelativeRotation(FRotator(0.0f, RotationDegreesPerSecond * DeltaTime, 0.0f));
+	if (Target) {
+		FVector CannonLocation = CannonBase->GetComponentLocation();
+		FVector TargetLocation = Target->GetTargetLocation();
+		TargetLocation.Z = CannonLocation.Z;
+		FRotator NewRotation((TargetLocation - CannonLocation).Rotation());
+		NewRotation.Yaw -= 90.0f;
+		CannonBase->SetWorldRotation(NewRotation);
+	} else {
+		CannonBase->AddRelativeRotation(FRotator(0.0f, RotationDegreesPerSecond * DeltaTime, 0.0f));
+	}
+}
+
+void ATowerActor::SetTarget(TScriptInterface<ITargetableMixin> NewTarget)
+{
+	Target = NewTarget;
 }
 
 void ATowerActor::ConstructComponents()

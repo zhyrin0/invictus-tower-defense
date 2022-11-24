@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "TowerManager.generated.h"
 
+class ATowerActor;
+class ITargetableMixin;
+
 UCLASS()
 class TOWERDEFENSE_API ATowerManager : public AActor
 {
@@ -14,9 +17,23 @@ class TOWERDEFENSE_API ATowerManager : public AActor
 public:
 	ATowerManager();
 
-	void Spawn(FVector Location) const;
+	virtual void Tick(float DeltaTime) override;
+	void Spawn(FVector Location);
 
 protected:
+	using FTargetLocationMap = TMap<ITargetableMixin*, FVector>;
+
+	void SelectTargets() const;
+	FTargetLocationMap GetTargets() const;
+	UObject* GetTarget(FVector TowerLocation, const FTargetLocationMap& Targets) const;
+
+
+	UPROPERTY(EditAnywhere)
+	float TargetingFequency;
+	UPROPERTY(VisibleAnywhere)
+	float TargetingDelta;
 	UPROPERTY(EditAnywhere)
 	int32 ZOffset;
+	UPROPERTY(VisibleAnywhere)
+	TArray<ATowerActor*> Towers;
 };
