@@ -22,6 +22,7 @@ ATowerActor::ATowerActor()
 	Top = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Top"));
 	CannonBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CannonBase"));
 	Cannon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cannon"));
+	ProjectileSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawn"));
 	ConstructComponents();
 }
 
@@ -56,7 +57,8 @@ void ATowerActor::SetTarget(TScriptInterface<ITargetableMixin> NewTarget)
 void ATowerActor::OnAttackTimeout()
 {
 	if (Target) {
-		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(Cannon->GetComponentLocation(), FRotator::ZeroRotator);
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
+				ProjectileSpawn->GetComponentLocation(), FRotator::ZeroRotator);
 		Projectile->Initialize(Target);
 	}
 }
@@ -82,4 +84,6 @@ void ATowerActor::ConstructComponents()
 		Data.Component->SetupAttachment(Data.Parent);
 		Data.Component->SetRelativeLocation(FVector(0.0f, 0.0f, Data.ZOffset));
 	}
+	ProjectileSpawn->SetupAttachment(Cannon);
+	ProjectileSpawn->AddLocalOffset(FVector(0.0f, 50.0f, 10.0f));
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/EngineTypes.h"
 #include "TimerManager.h"
@@ -66,6 +67,8 @@ protected:
 	UStaticMeshComponent* CannonBase;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Cannon;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* ProjectileSpawn;
 
 private:
 	void ConstructComponents();
