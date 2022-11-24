@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TowerSpawner.h"
+#include "TowerManager.h"
 #include "TowerActor.h"
 
-ATowerSpawner::ATowerSpawner()
+ATowerManager::ATowerManager()
 	: ZOffset(20)
 {
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void ATowerSpawner::Spawn(FVector Location) const
+void ATowerManager::Spawn(FVector Location) const
 {
 	Location.Z += ZOffset;
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,

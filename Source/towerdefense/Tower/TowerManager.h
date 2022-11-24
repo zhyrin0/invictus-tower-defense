@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "TowerSpawner.generated.h"
+#include "TowerManager.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API ATowerSpawner : public AActor
+class TOWERDEFENSE_API ATowerManager : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	ATowerSpawner();
+	ATowerManager();
 
 	void Spawn(FVector Location) const;
 

@@ -6,7 +6,7 @@
 #include "GameFramework/GameStateBase.h"
 #include "Enemy/EnemyManager.h"
 #include "Level/LevelBuilderActor.h"
-#include "Tower/TowerSpawner.h"
+#include "Tower/TowerManager.h"
 #include "TowerDefenseGameState.generated.h"
 
 UCLASS()
@@ -26,5 +26,5 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	AEnemyManager* EnemyManager;
 	UPROPERTY(VisibleAnywhere)
-	ATowerSpawner* TowerSpawner;
+	ATowerManager* TowerManager;
 };

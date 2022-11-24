@@ -11,7 +11,7 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	LevelBuilder = World->SpawnActor<ALevelBuilderActor>();
 	LevelBuilder->BeganPlay.BindUObject(this, &ATowerDefenseGameState::BeginLevel);
 	EnemyManager = World->SpawnActor<AEnemyManager>();
-	TowerSpawner = World->SpawnActor<ATowerSpawner>();
+	TowerManager = World->SpawnActor<ATowerManager>();
 }
 
 void ATowerDefenseGameState::BeginLevel(FString LevelName) const
@@ -24,7 +24,7 @@ void ATowerDefenseGameState::BeginLevel(FString LevelName) const
 	}
 	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Descriptor->Width, Descriptor->Height, Descriptor->Tiles);
 	for (auto Request : Requests) {
-		Request->BindUObject(TowerSpawner, &ATowerSpawner::Spawn);
+		Request->BindUObject(TowerManager, &ATowerManager::Spawn);
 	}
 	EnemyManager->BeginLevel(Descriptor->Waypoints, Descriptor->EnemyCount,
 			Descriptor->EnemySpawnDelay, Descriptor->EnemySpawnCooldown);
