@@ -15,17 +15,10 @@ AEnemy::AEnemy()
 	Mesh->SetupAttachment(RootComponent);
 }
 
-void AEnemy::Initialize(FVector Spawnpoint)
+void AEnemy::Initialize()
 {
-	if (RequestNextWaypoint.IsBound()) {
-		FVector NextWaypoint = Spawnpoint;
-		bool BaseReached = RequestNextWaypoint.Execute(NextWaypoint);
-		if (BaseReached) {
-			Destroy();
-			return;
-		}
-		SetCurrentWaypoint(NextWaypoint);
-	}
+	CurrentWaypoint = GetActorLocation();
+	DoRequestNextWaypoint();
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -33,20 +26,20 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	AddActorLocalOffset(Direction * Speed * DeltaTime);
 	if (GetActorLocation().Equals(CurrentWaypoint, 0.5)) {
-		if (RequestNextWaypoint.IsBound()) {
-			FVector NextWaypoint = CurrentWaypoint;
-			bool BaseReached = RequestNextWaypoint.Execute(NextWaypoint);
-			if (BaseReached) {
-				Destroy();
-				return;
-			}
-			SetCurrentWaypoint(NextWaypoint);
-		}
+		DoRequestNextWaypoint();
 	}
 }
 
-void AEnemy::SetCurrentWaypoint(FVector NewWaypoint)
+void AEnemy::DoRequestNextWaypoint()
 {
-	CurrentWaypoint = NewWaypoint;
-	Direction = (CurrentWaypoint - GetActorLocation()).GetUnsafeNormal();
+	if (RequestNextWaypoint.IsBound()) {
+		FVector NextWaypoint;
+		bool LastWaypointReached = RequestNextWaypoint.Execute(CurrentWaypoint, NextWaypoint);
+		if (LastWaypointReached) {
+			Destroy();
+			return;
+		}
+		CurrentWaypoint = NextWaypoint;
+		Direction = (CurrentWaypoint - GetActorLocation()).GetUnsafeNormal();
+	}
 }

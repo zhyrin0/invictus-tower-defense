@@ -22,13 +22,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	void Spawn();
-	// note: Returns true if base is reached, otherwise returns false and writes next waypoint into parameter.
+	// note: Returns true if last waypoint is reached,
+	// otherwise returns false and writes next waypoint into out parameter.
 	UFUNCTION()
-	bool OnEnemyRequestNextWaypoint(FVector& EnemyWaypoint);
+	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
 
 	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)
-	TArray<FGridPosition> Waypoints;
+	TArray<FVector> Waypoints;
 	UPROPERTY(VisibleAnywhere)
 	int32 EnemiesToSpawn;
 	UPROPERTY(VisibleAnywhere)

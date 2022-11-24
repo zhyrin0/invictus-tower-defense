@@ -13,17 +13,17 @@ class TOWERDEFENSE_API AEnemy : public AActor
 	GENERATED_BODY()
 
 public:
-	DECLARE_DELEGATE_RetVal_OneParam(bool, FRequestNextWaypoint, FVector&)
+	DECLARE_DELEGATE_RetVal_TwoParams(bool, FRequestNextWaypoint, FVector, FVector&)
 
 	AEnemy();
 
-	void Initialize(FVector Spawnpoint);
+	void Initialize();
 	virtual void Tick(float DeltaTime) override;
 
 	FRequestNextWaypoint RequestNextWaypoint;
 
 protected:
-	void SetCurrentWaypoint(FVector NewWaypoint);
+	void DoRequestNextWaypoint();
 
 	UPROPERTY(VisibleAnywhere)
 	float Speed;

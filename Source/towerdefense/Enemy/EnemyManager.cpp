@@ -22,7 +22,11 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 		TimerManager.PauseTimer(SpawnTimer);
 		TimerManager.ClearTimer(SpawnTimer);
 	}
-	Waypoints = pWaypoints;
+	Waypoints.Empty();
+	Waypoints.Reserve(pWaypoints.Num());
+	for (FGridPosition& GridPosition : pWaypoints) {
+		Waypoints.Emplace(GridPosition.XPosition * 100.0f, GridPosition.YPosition * 100.0f, ZOffset);
+	}
 	EnemiesToSpawn = EnemyCount;
 	EnemiesRemaining = 0;
 	SpawnTimer = FTimerHandle();
@@ -31,9 +35,7 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 
 void AEnemyManager::Spawn()
 {
-	FVector SpawnLocation(Waypoints[0].XPosition, Waypoints[0].YPosition, 0.0f);
-	SpawnLocation *= 100.0f;
-	SpawnLocation.Z = ZOffset;
+	FVector SpawnLocation(Waypoints[0]);
 	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
 	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
 	++EnemiesRemaining;
@@ -43,20 +45,19 @@ void AEnemyManager::Spawn()
 		TimerManager.PauseTimer(SpawnTimer);
 		TimerManager.ClearTimer(SpawnTimer);
 	}
-	Enemy->Initialize(SpawnLocation);
+	Enemy->Initialize();
 }
 
-bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector& EnemyWaypoint)
+bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint)
 {
-	bool IsReturnValue = false;
-	for (FGridPosition Waypoint : Waypoints) {
-		FVector CurrentWaypoint(Waypoint.XPosition * 100.0f, Waypoint.YPosition * 100.0f, ZOffset);
-		if (IsReturnValue) {
-			EnemyWaypoint = CurrentWaypoint;
+	bool IsNextWaypoint = false;
+	for (FVector Waypoint : Waypoints) {
+		if (IsNextWaypoint) {
+			OutNextWaypoint = Waypoint;
 			return false;
 		}
-		if (EnemyWaypoint.Equals(CurrentWaypoint, 0.5)) {
-			IsReturnValue = true;
+		if (CurrentWaypoint.Equals(Waypoint, 0.5)) {
+			IsNextWaypoint = true;
 		}
 	}
 	return true;
