@@ -10,14 +10,20 @@ AProjectile::AProjectile()
 	: TravelTime(1.0f), TravelDelta(0.0f)
 {
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetSphereRadius(12.5f);
+	RootComponent = Sphere;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	auto MaterialAsset = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial'"));
 	MeshAsset.Object->SetMaterial(0, MaterialAsset.Object);
 	Mesh->SetStaticMesh(MeshAsset.Object);
-	Mesh->SetRelativeScale3D(FVector(0.25));
+	Mesh->SetRelativeScale3D(FVector(0.25f));
 	Mesh->SetupAttachment(RootComponent);
+
+	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Sphere->SetCollisionProfileName(FName(TEXT("OverlapAllDynamic")));
+	Sphere->SetGenerateOverlapEvents(true);
 }
 
 void AProjectile::Initialize(TScriptInterface<ITargetableMixin> pTarget)

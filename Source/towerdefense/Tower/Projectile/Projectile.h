@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ScriptInterface.h"
 #include "../../Enemy/TargetableMixin.h"
@@ -30,6 +31,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TScriptInterface<ITargetableMixin> Target;
 
+	UPROPERTY(EditAnywhere)
+	USphereComponent* Sphere;
 	UPROPERTY()
 	UStaticMeshComponent* Mesh;
 };
