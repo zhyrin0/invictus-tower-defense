@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "TimerManager.h"
 #include "Engine/EngineTypes.h"
+#include "UObject/ScriptInterface.h"
 #include "../Level/LevelDescriptor.h"
+#include "TargetableMixin.h"
 #include "EnemyManager.generated.h"
 
 UCLASS()
@@ -15,9 +17,15 @@ class TOWERDEFENSE_API AEnemyManager : public AActor
 	GENERATED_BODY()
 
 public:
+	DECLARE_DELEGATE_OneParam(FEnemySpawned, TScriptInterface<ITargetableMixin>)
+	DECLARE_DELEGATE_OneParam(FEnemyDestroyed, TScriptInterface<ITargetableMixin>)
+
 	AEnemyManager();
 
 	void BeginLevel(TArray<FGridPosition> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
+
+	FEnemySpawned EnemySpawned;
+	FEnemyDestroyed EnemyDestroyed;
 
 protected:
 	virtual void BeginPlay() override;
@@ -27,9 +35,9 @@ protected:
 	UFUNCTION()
 	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
 	UFUNCTION()
-	void OnEnemyLastWaypointReached();
+	void OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin> Enemy);
 	UFUNCTION()
-	void OnEnemyDestroyed();
+	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
 
 	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "UObject/ScriptInterface.h"
 #include "TargetableMixin.generated.h"
 
 UINTERFACE(MinimalAPI)
@@ -17,7 +18,9 @@ class TOWERDEFENSE_API ITargetableMixin
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE(FTargetDestroyed)
+	// todo: The plan was to have Towers notified when their target is destroyed to retarget,
+	// but the functionality has been moved to TowerManager. Can be removed.
+	DECLARE_MULTICAST_DELEGATE_OneParam(FTargetDestroyed, TScriptInterface<ITargetableMixin>)
 
 	virtual FVector GetTargetLocation() const = 0;
 

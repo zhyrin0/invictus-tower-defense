@@ -48,6 +48,8 @@ void AEnemyManager::Spawn()
 		TimerManager.ClearTimer(SpawnTimer);
 	}
 	Enemy->Initialize();
+	TScriptInterface<ITargetableMixin> Target(Cast<UObject>(Enemy));
+	EnemySpawned.ExecuteIfBound(Target);
 }
 
 bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint)
@@ -65,13 +67,15 @@ bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector&
 	return true;
 }
 
-void AEnemyManager::OnEnemyLastWaypointReached()
+void AEnemyManager::OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin> Enemy)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyLastWaypointReached"));
+	EnemyDestroyed.ExecuteIfBound(Enemy);
 }
 
-void AEnemyManager::OnEnemyDestroyed()
+void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 {
 	--EnemiesRemaining;
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
+	EnemyDestroyed.ExecuteIfBound(Enemy);
 }

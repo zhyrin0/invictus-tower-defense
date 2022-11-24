@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UObject/ScriptInterface.h"
+#include "../Enemy/TargetableMixin.h"
 #include "TowerManager.generated.h"
 
 class ATowerActor;
-class ITargetableMixin;
 
 UCLASS()
 class TOWERDEFENSE_API ATowerManager : public AActor
@@ -19,13 +20,17 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	void Spawn(FVector Location);
+	UFUNCTION()
+	void OnTargetSpawned(TScriptInterface<ITargetableMixin> Target);
+	UFUNCTION()
+	void OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target);
 
 protected:
-	using FTargetLocationMap = TMap<ITargetableMixin*, FVector>;
+	using FTargetLocationMap = TMap<TScriptInterface<ITargetableMixin>, FVector>;
 
 	void SelectTargets() const;
-	FTargetLocationMap GetTargets() const;
-	UObject* GetTarget(FVector TowerLocation, const FTargetLocationMap& Targets) const;
+	FTargetLocationMap GetTargetMap() const;
+	TScriptInterface<ITargetableMixin> GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const;
 
 
 	UPROPERTY(EditAnywhere)
@@ -36,4 +41,6 @@ protected:
 	int32 ZOffset;
 	UPROPERTY(VisibleAnywhere)
 	TArray<ATowerActor*> Towers;
+	UPROPERTY(VisibleAnywhere)
+	TArray<TScriptInterface<ITargetableMixin>> Targets;
 };

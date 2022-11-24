@@ -12,6 +12,8 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	LevelBuilder->BeganPlay.BindUObject(this, &ATowerDefenseGameState::BeginLevel);
 	EnemyManager = World->SpawnActor<AEnemyManager>();
 	TowerManager = World->SpawnActor<ATowerManager>();
+	EnemyManager->EnemySpawned.BindUObject(TowerManager, &ATowerManager::OnTargetSpawned);
+	EnemyManager->EnemyDestroyed.BindUObject(TowerManager, &ATowerManager::OnTargetDestroyed);
 }
 
 void ATowerDefenseGameState::BeginLevel(FString LevelName) const

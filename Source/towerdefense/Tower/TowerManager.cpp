@@ -3,8 +3,6 @@
 #include "TowerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/NumericLimits.h"
-#include "UObject/ScriptInterface.h"
-#include "../Enemy/TargetableMixin.h"
 #include "TowerActor.h"
 
 ATowerManager::ATowerManager()
@@ -31,40 +29,57 @@ void ATowerManager::Spawn(FVector Location)
 	Towers.Add(GetWorld()->SpawnActor<ATowerActor>(Location, FRotator()));
 }
 
+void ATowerManager::OnTargetSpawned(TScriptInterface<ITargetableMixin> Target)
+{
+	Targets.Emplace(Target);
+	SelectTargets();
+	TargetingDelta = 0.0f;
+}
+
+void ATowerManager::OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target)
+{
+	Targets.Remove(Target);
+	SelectTargets();
+	TargetingDelta = 0.0f;
+}
+
 void ATowerManager::SelectTargets() const
 {
 	if (Towers.IsEmpty()) {
 		return;
 	}
-	FTargetLocationMap Targets = GetTargets();
+	if (Targets.IsEmpty()) {
+		TScriptInterface<ITargetableMixin> InvalidTarget;
+		for (ATowerActor* Tower : Towers) {
+			Tower->SetTarget(InvalidTarget);
+		}
+		return;
+	}
+	FTargetLocationMap TargetMap = GetTargetMap();
 	for (ATowerActor* Tower : Towers) {
-		TScriptInterface<ITargetableMixin> Target(GetTarget(Tower->GetActorLocation(), Targets));
-		Tower->SetTarget(Target);
+		Tower->SetTarget(GetNearestTarget(Tower->GetActorLocation(), GetTargetMap()));
 	}
 }
 
-ATowerManager::FTargetLocationMap ATowerManager::GetTargets() const
+ATowerManager::FTargetLocationMap ATowerManager::GetTargetMap() const
 {
 	FTargetLocationMap Result;
-	TArray<AActor*> GenericTargets;
-	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), UTargetableMixin::StaticClass(), GenericTargets);
-	for (AActor* Generic : GenericTargets) {
-		ITargetableMixin* Target = Cast<ITargetableMixin>(Generic);
+	for (TScriptInterface<ITargetableMixin> Target : Targets) {
 		Result.Add(Target, Target->GetTargetLocation());
 	}
 	return Result;
 }
 
-UObject* ATowerManager::GetTarget(FVector TowerLocation, const FTargetLocationMap& Targets) const
+TScriptInterface<ITargetableMixin> ATowerManager::GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const
 {
-	ITargetableMixin* Result = nullptr;
+	TScriptInterface<ITargetableMixin> Result;
 	float SmallestDistance = TNumericLimits<float>::Max();
-	for (const auto& Pair : Targets) {
+	for (const auto& Pair : TargetMap) {
 		float CurrentDistance = FVector::DistSquared(TowerLocation, Pair.Value);
 		if (CurrentDistance < SmallestDistance) {
 			Result = Pair.Key;
 			SmallestDistance = CurrentDistance;
 		}
 	}
-	return Cast<UObject>(Result);
+	return Result;
 }
