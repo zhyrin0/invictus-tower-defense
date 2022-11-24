@@ -26,6 +26,8 @@ protected:
 	// otherwise returns false and writes next waypoint into out parameter.
 	UFUNCTION()
 	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
+	UFUNCTION()
+	void OnEnemyDestroyed();
 
 	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)

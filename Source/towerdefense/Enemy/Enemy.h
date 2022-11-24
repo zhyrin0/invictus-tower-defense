@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "TargetableMixin.h"
 #include "Enemy.generated.h"
 
 UCLASS()
-class TOWERDEFENSE_API AEnemy : public AActor
+class TOWERDEFENSE_API AEnemy : public AActor, public ITargetableMixin
 {
 	GENERATED_BODY()
 
@@ -19,6 +20,8 @@ public:
 
 	void Initialize();
 	virtual void Tick(float DeltaTime) override;
+
+	virtual FVector GetTargetLocation() const override;
 
 	FRequestNextWaypoint RequestNextWaypoint;
 

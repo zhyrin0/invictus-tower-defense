@@ -38,6 +38,7 @@ void AEnemyManager::Spawn()
 	FVector SpawnLocation(Waypoints[0]);
 	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
 	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
+	Enemy->TargetDestroyed.AddUObject(this, &AEnemyManager::OnEnemyDestroyed);
 	++EnemiesRemaining;
 	--EnemiesToSpawn;
 	if (EnemiesToSpawn < 1) {
@@ -61,4 +62,10 @@ bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector&
 		}
 	}
 	return true;
+}
+
+void AEnemyManager::OnEnemyDestroyed()
+{
+	--EnemiesRemaining;
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
 }

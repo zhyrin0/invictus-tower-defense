@@ -30,6 +30,11 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
+FVector AEnemy::GetTargetLocation() const
+{
+	return GetActorLocation();
+}
+
 void AEnemy::DoRequestNextWaypoint()
 {
 	if (RequestNextWaypoint.IsBound()) {
