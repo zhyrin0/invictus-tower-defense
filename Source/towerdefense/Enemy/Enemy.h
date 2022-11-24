@@ -22,6 +22,8 @@ public:
 
 	void Initialize();
 	virtual void Tick(float DeltaTime) override;
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+			AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual FVector GetTargetLocation() const override;
 

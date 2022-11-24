@@ -32,6 +32,14 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
+						 AController* EventInstigator, AActor* DamageCauser)
+{
+	TargetDestroyed.Broadcast(Cast<UObject>(this));
+	Destroy();
+	return DamageAmount;
+}
+
 FVector AEnemy::GetTargetLocation() const
 {
 	return GetActorLocation();

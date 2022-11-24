@@ -2,6 +2,7 @@
 
 #include "Projectile.h"
 #include "Engine/StaticMesh.h"
+#include "Kismet/GameplayStatics.h"
 #include "Materials/Material.h"
 #include "Math/UnrealMathUtility.h"
 #include "UObject/ConstructorHelpers.h"
@@ -49,7 +50,7 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == Target.GetObject()) {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("OnBeginOverlap"));
+		UGameplayStatics::ApplyDamage(OtherActor, 1.0f, nullptr, nullptr, UDamageType::StaticClass());
 		Destroy();
 	}
 }
