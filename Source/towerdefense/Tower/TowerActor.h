@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/EngineTypes.h"
+#include "TimerManager.h"
 #include "UObject/ScriptInterface.h"
 #include "TowerActor.generated.h"
 
@@ -43,11 +45,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnAttackTimeout();
 
 	UPROPERTY(EditAnywhere)
 	float RotationDegreesPerSecond;
 	UPROPERTY(VisibleAnywhere)
 	TScriptInterface<ITargetableMixin> Target;
+	UPROPERTY(VisibleAnywhere)
+	FTimerHandle AttackTimer;
+	FTimerDelegate AttackTimeout;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Base;

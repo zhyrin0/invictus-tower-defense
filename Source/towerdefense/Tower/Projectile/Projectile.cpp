@@ -23,7 +23,7 @@ AProjectile::AProjectile()
 void AProjectile::Initialize(TScriptInterface<ITargetableMixin> pTarget)
 {
 	SpawnLocation = GetActorLocation();
-	Target = Target;
+	Target = pTarget;
 }
 
 void AProjectile::Tick(float DeltaTime)

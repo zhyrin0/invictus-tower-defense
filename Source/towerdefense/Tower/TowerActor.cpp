@@ -3,6 +3,7 @@
 
 #include "TowerActor.h"
 #include "Engine/StaticMesh.h"
+#include "Projectile/Projectile.h"
 #include "../Enemy/TargetableMixin.h"
 
 FTowerComponentConstructionData::FTowerComponentConstructionData(
@@ -27,6 +28,9 @@ ATowerActor::ATowerActor()
 void ATowerActor::BeginPlay()
 {
 	Super::BeginPlay();
+	AttackTimeout.BindUObject(this, &ATowerActor::OnAttackTimeout);
+	FTimerManager& TimerManager = GetWorldTimerManager();
+	TimerManager.SetTimer(AttackTimer, AttackTimeout, 1.5f, true);
 }
 
 void ATowerActor::Tick(float DeltaTime)
@@ -47,6 +51,14 @@ void ATowerActor::Tick(float DeltaTime)
 void ATowerActor::SetTarget(TScriptInterface<ITargetableMixin> NewTarget)
 {
 	Target = NewTarget;
+}
+
+void ATowerActor::OnAttackTimeout()
+{
+	if (Target) {
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(Cannon->GetComponentLocation(), FRotator::ZeroRotator);
+		Projectile->Initialize(Target);
+	}
 }
 
 void ATowerActor::ConstructComponents()
