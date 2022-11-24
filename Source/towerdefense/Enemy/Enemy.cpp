@@ -7,12 +7,14 @@ AEnemy::AEnemy()
 	: Speed(50.0f), Direction(FVector::ZeroVector)
 {
 	PrimaryActorTick.bCanEverTick = true;
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(
 			TEXT("StaticMesh'/Game/Enemy/Meshes/enemy_ufoPurple.enemy_ufoPurple'"));
 	Mesh->SetStaticMesh(MeshAsset.Object);
-	Mesh->SetupAttachment(RootComponent);
+	RootComponent = Mesh;
+
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Mesh->SetCollisionProfileName(FName(TEXT("OverlapAllDynamic")));
 }
 
 void AEnemy::Initialize()
