@@ -27,6 +27,8 @@ protected:
 	UFUNCTION()
 	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
 	UFUNCTION()
+	void OnEnemyLastWaypointReached();
+	UFUNCTION()
 	void OnEnemyDestroyed();
 
 	static constexpr float ZOffset = 30.0f;
