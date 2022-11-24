@@ -28,7 +28,7 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 		Waypoints.Emplace(GridPosition.XPosition * 100.0f, GridPosition.YPosition * 100.0f, ZOffset);
 	}
 	EnemiesToSpawn = EnemyCount;
-	EnemiesRemaining = 0;
+	EnemiesRemaining = EnemiesToSpawn;
 	SpawnTimer = FTimerHandle();
 	TimerManager.SetTimer(SpawnTimer, SpawnTimerTimeout, EnemySpawnCooldown, true, EnemySpawnDelay);
 }
@@ -40,7 +40,6 @@ void AEnemyManager::Spawn()
 	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
 	Enemy->LastWaypointReached.BindUObject(this, &AEnemyManager::OnEnemyLastWaypointReached);
 	Enemy->TargetDestroyed.AddUObject(this, &AEnemyManager::OnEnemyDestroyed);
-	++EnemiesRemaining;
 	--EnemiesToSpawn;
 	if (EnemiesToSpawn < 1) {
 		FTimerManager& TimerManager = GetWorldTimerManager();
@@ -76,6 +75,9 @@ void AEnemyManager::OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin
 void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 {
 	--EnemiesRemaining;
+	if (EnemiesRemaining < 1) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("All enemies defeated!"));
+	}
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
 	EnemyDestroyed.ExecuteIfBound(Enemy);
 }
