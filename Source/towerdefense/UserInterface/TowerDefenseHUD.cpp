@@ -5,17 +5,39 @@
 #include "Widgets/SWeakWidget.h"
 #include "SMainMenu.h"
 
+ATowerDefenseHUD::ATowerDefenseHUD()
+{
+	MainMenu = SNew(SMainMenu).OwningHUD(this);
+	MainMenuContainer = SNew(SWeakWidget).PossiblyNullContent(MainMenu.ToSharedRef());
+}
+
 void ATowerDefenseHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	MainMenu = SNew(SMainMenu).OwningHUD(this);
+	MainMenu->PlayClicked.AddUObject(this, &ATowerDefenseHUD::OnMainMenuPlayClicked);
 	ShowMainMenu();
+}
+
+FGameEvents::FLevelRequested& ATowerDefenseHUD::GetLevelRequestedDelegate()
+{
+	return MainMenu->PlayClicked;
+}
+
+FGameEvents::FQuitRequested& ATowerDefenseHUD::GetQuitRequestedDelegate()
+{
+	return MainMenu->QuitClicked;
+}
+
+void ATowerDefenseHUD::OnMainMenuPlayClicked(FText _PlayerName, int32 _LevelNumber)
+{
+	HideMainMenu();
 }
 
 void ATowerDefenseHUD::ShowMainMenu()
 {
 	if (GEngine && GEngine->GameViewport) {
-		GEngine->GameViewport->AddViewportWidgetContent(MainMenu.ToSharedRef());
+		GEngine->GameViewport->AddViewportWidgetContent(MainMenuContainer.ToSharedRef());
+		MainMenu->SetVisibility(EVisibility::Visible);
 		if (PlayerOwner) {
 			PlayerOwner->SetInputMode(FInputModeUIOnly());
 		}
@@ -24,8 +46,9 @@ void ATowerDefenseHUD::ShowMainMenu()
 
 void ATowerDefenseHUD::HideMainMenu()
 {
-	if (GEngine && GEngine->GameViewport && MainMenu.IsValid()) {
-		GEngine->GameViewport->RemoveViewportWidgetContent(MainMenu.ToSharedRef());
+	if (GEngine && GEngine->GameViewport && MainMenuContainer.IsValid()) {
+		MainMenu->SetVisibility(EVisibility::Hidden);
+		GEngine->GameViewport->RemoveViewportWidgetContent(MainMenuContainer.ToSharedRef());
 		if (PlayerOwner) {
 			PlayerOwner->SetInputMode(FInputModeGameAndUI());
 		}

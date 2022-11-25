@@ -16,11 +16,10 @@ class TOWERDEFENSE_API ATowerDefenseGameState : public AGameStateBase
 
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
-
-protected:
 	UFUNCTION()
 	void BeginLevel(FString LevelName) const;
 
+protected:
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilderActor* LevelBuilder;
 	UPROPERTY(VisibleAnywhere)
