@@ -14,7 +14,6 @@ class TOWERDEFENSE_API SMainMenu : public SCompoundWidget
 public:
 	SLATE_BEGIN_ARGS(SMainMenu)
 	{}
-	SLATE_ARGUMENT(TWeakObjectPtr<class ATowerDefenseHUD>, OwningHUD)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
@@ -27,7 +26,6 @@ protected:
 	FReply OnPlayClicked() const;
 	FReply OnQuitClicked() const;
 
-	TWeakObjectPtr<class ATowerDefenseHUD> OwningHUD;
 	TSharedPtr<class SEditableText> PlayerName;
 	TSharedPtr<class SSpinBox<int32>> LevelNumber;
 };

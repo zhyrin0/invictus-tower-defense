@@ -7,7 +7,7 @@
 
 ATowerDefenseHUD::ATowerDefenseHUD()
 {
-	MainMenu = SNew(SMainMenu).OwningHUD(this);
+	MainMenu = SNew(SMainMenu);
 	MainMenuContainer = SNew(SWeakWidget).PossiblyNullContent(MainMenu.ToSharedRef());
 }
 

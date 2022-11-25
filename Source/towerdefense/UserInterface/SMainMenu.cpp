@@ -6,15 +6,12 @@
 #include "Widgets/Input/SEditableText.h"
 #include "Widgets/Input/SSpinBox.h"
 #include "Widgets/Layout/SBackgroundBlur.h"
-#include "TowerDefenseHUD.h"
 
 #define LOCTEXT_NAMESPACE "UI"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SMainMenu::Construct(const FArguments& InArgs)
 {
-	OwningHUD = InArgs._OwningHUD;
-
 	FMargin DefaultPadding(0.0f, 15.0f);
 	FMargin InlinePadding(15.0f, 0.0f);
 	FSlateFontInfo TextStyle = FCoreStyle::Get().GetFontStyle("EmbossedText");
