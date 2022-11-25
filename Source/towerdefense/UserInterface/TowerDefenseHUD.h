@@ -15,6 +15,10 @@ class TOWERDEFENSE_API ATowerDefenseHUD : public AHUD
 public:
 	ATowerDefenseHUD();
 
+	void ShowMainMenu();
+	void HideMainMenu();
+	void ShowLevelHUD();
+	void HideLevelHUD();
 	FGameEvents::FLevelRequested& GetLevelRequestedDelegate();
 	FGameEvents::FQuitRequested& GetQuitRequestedDelegate();
 
@@ -23,9 +27,14 @@ protected:
 	// note: Main menu doesn't use any of the delegate's arguments.
 	UFUNCTION()
 	void OnMainMenuPlayClicked(FText _PlayerName, int32 _LevelNumber);
-	void ShowMainMenu();
-	void HideMainMenu();
+
+	void ShowWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,
+			EVisibility Visibility, bool UpdateInputMode, const FInputModeDataBase& InputMode);
+	void HideWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,
+			bool UpdateInputMode, const FInputModeDataBase& InputMode);
 
 	TSharedPtr<class SMainMenu> MainMenu;
 	TSharedPtr<class SWeakWidget> MainMenuContainer;
+	TSharedPtr<class SLevelHUD> LevelHUD;
+	TSharedPtr<class SWeakWidget> LevelHUDContainer;
 };

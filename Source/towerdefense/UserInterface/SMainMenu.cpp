@@ -36,7 +36,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 				.HAlign(HAlign_Fill).VAlign(VAlign_Top)
 				.Padding(DefaultPadding)
 				[
-					// note: Player name input
+// note: Player name input
 					SNew(SHorizontalBox)
 					+ SHorizontalBox::Slot()
 					.HAlign(HAlign_Left).VAlign(VAlign_Center)
@@ -62,7 +62,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 				.HAlign(HAlign_Fill).VAlign(VAlign_Top)
 				.Padding(DefaultPadding)
 				[
-					// note: Level input
+// note: Level input
 					SNew(SHorizontalBox)
 					+ SHorizontalBox::Slot()
 					.HAlign(HAlign_Left).VAlign(VAlign_Center)
@@ -89,7 +89,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 				.HAlign(HAlign_Center).VAlign(VAlign_Top)
 				.Padding(DefaultPadding)
 				[
-					// note: Play button
+// note: Play button
 					SNew(SButton)
 					.OnClicked(this, &SMainMenu::OnPlayClicked)
 					[
@@ -101,7 +101,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 				.HAlign(HAlign_Center).VAlign(VAlign_Top)
 				.Padding(DefaultPadding)
 				[
-					// note: Quit button
+// note: Quit button
 					SNew(SButton)
 					.OnClicked(this, &SMainMenu::OnQuitClicked)
 					[
