@@ -34,6 +34,8 @@ protected:
 	void DoRequestNextWaypoint();
 
 	UPROPERTY(VisibleAnywhere)
+	float Health;
+	UPROPERTY(VisibleAnywhere)
 	float Speed;
 	UPROPERTY(VisibleAnywhere)
 	FVector CurrentWaypoint;

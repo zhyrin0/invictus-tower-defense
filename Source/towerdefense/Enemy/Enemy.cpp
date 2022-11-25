@@ -4,7 +4,7 @@
 #include "Engine/StaticMesh.h"
 
 AEnemy::AEnemy()
-	: Speed(50.0f), Direction(FVector::ZeroVector)
+	: Health(2.0f), Speed(50.0f), Direction(FVector::ZeroVector)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -35,8 +35,11 @@ void AEnemy::Tick(float DeltaTime)
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 						 AController* EventInstigator, AActor* DamageCauser)
 {
-	TargetDestroyed.Broadcast(Cast<UObject>(this));
-	Destroy();
+	Health -= DamageAmount;
+	if (Health < 1.0f) {
+		TargetDestroyed.Broadcast(Cast<UObject>(this));
+		Destroy();
+	}
 	return DamageAmount;
 }
 
