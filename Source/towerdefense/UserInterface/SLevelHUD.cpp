@@ -9,8 +9,9 @@
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SLevelHUD::Construct(const FArguments& InArgs)
 {
-	FMargin LinePadding(0.0f, 5.0f);
-	FMargin InlinePadding(5.0f, 0.0f);
+	FMargin ContainerPadding(15.0f, 15.0f);
+	FMargin InlinePadding(25.0f, 0.0f);
+	float Column1Width = 550.0f;
 	FSlateFontInfo TextStyle = FCoreStyle::Get().GetFontStyle("EmbossedText");
 	TextStyle.Size = 24.0f;
 	FColor Color = FColor::White;
@@ -18,87 +19,87 @@ void SLevelHUD::Construct(const FArguments& InArgs)
 	FVector2D ShadowOffset = FVector2D(2.0f, 2.0f);
 
 	ChildSlot
-	.HAlign(HAlign_Left).VAlign(VAlign_Top)
 	[
-		SNew(SBackgroundBlur)
+		SNew(SBox)
 		.HAlign(HAlign_Left).VAlign(VAlign_Top)
-		.BlurRadius(100).BlurStrength(5.0f)
+		.Padding(ContainerPadding)
 		[
 			SNew(SVerticalBox)
-			+ SVerticalBox::Slot()
-			.HAlign(HAlign_Left).VAlign(VAlign_Top)
-			.Padding(LinePadding)
-			[
 // note: Player name
+			+ SVerticalBox::Slot()
+			[
 				SNew(SHorizontalBox)
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
 				.Padding(InlinePadding)
 				[
-					SNew(STextBlock)
-					.Text(LOCTEXT("PLAYER_NAME", "Name:")).Font(TextStyle).ColorAndOpacity(Color)
-					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+					SNew(SBox)
+					.HAlign(HAlign_Fill)
+					.WidthOverride(Column1Width)
+					[
+						SNew(STextBlock)
+						.Text(LOCTEXT("PLAYER_NAME", "Name:")).Font(TextStyle).ColorAndOpacity(Color)
+						.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+						.Justification(ETextJustify::Right)
+					]
 				]
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
-				.Padding(InlinePadding)
 				[
 					SAssignNew(PlayerName, STextBlock)
 					.Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
 				]
+			]
 // note: Level number
+			+ SVerticalBox::Slot()
+			[
+				SNew(SHorizontalBox)
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
 				.Padding(InlinePadding)
 				[
 					SNew(STextBlock)
 					.Text(LOCTEXT("LEVEL", "Level:")).Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+					.Justification(ETextJustify::Right)
 				]
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
-				.Padding(InlinePadding)
 				[
 					SAssignNew(LevelNumber, STextBlock)
 					.Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
 				]
 			]
+// note: Enemies destroyed
 			+ SVerticalBox::Slot()
-			.HAlign(HAlign_Left).VAlign(VAlign_Top)
-			.Padding(LinePadding)
 			[
 				SNew(SHorizontalBox)
-// note: Enemies destroyed
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
 				.Padding(InlinePadding)
 				[
 					SNew(STextBlock)
 					.Text(LOCTEXT("ENEMIES_DESTROYED", "Enemies destroyed:")).Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+					.Justification(ETextJustify::Right)
 				]
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
-				.Padding(InlinePadding)
 				[
 					SAssignNew(EnemiesDestroyed, STextBlock)
 					.Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
 				]
+			]
 // note: Enemies remaining
+			+ SVerticalBox::Slot()
+			[
+				SNew(SHorizontalBox)
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
 				.Padding(InlinePadding)
 				[
 					SNew(STextBlock)
-					.Text(LOCTEXT("ENEMIES_REMAINING", "remaining:")).Font(TextStyle).ColorAndOpacity(Color)
+					.Text(LOCTEXT("ENEMIES_REMAINING", "Enemies remaining:")).Font(TextStyle).ColorAndOpacity(Color)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+					.Justification(ETextJustify::Right)
 				]
 				+ SHorizontalBox::Slot()
-				.HAlign(HAlign_Left).VAlign(VAlign_Top)
-				.Padding(InlinePadding)
 				[
 					SAssignNew(EnemiesRemaining, STextBlock)
 					.Font(TextStyle).ColorAndOpacity(Color)
@@ -107,7 +108,6 @@ void SLevelHUD::Construct(const FArguments& InArgs)
 			]
 		]
 	];
-	
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 

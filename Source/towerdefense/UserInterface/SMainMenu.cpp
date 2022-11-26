@@ -13,7 +13,6 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SMainMenu::Construct(const FArguments& InArgs)
 {
 	FMargin DefaultPadding(0.0f, 15.0f);
-	FMargin InlinePadding(15.0f, 0.0f);
 	FSlateFontInfo TextStyle = FCoreStyle::Get().GetFontStyle("EmbossedText");
 	TextStyle.Size = 36.0f;
 	FColor Color = FColor::White;
@@ -39,22 +38,23 @@ void SMainMenu::Construct(const FArguments& InArgs)
 // note: Player name input
 					SNew(SHorizontalBox)
 					+ SHorizontalBox::Slot()
-					.HAlign(HAlign_Left).VAlign(VAlign_Center)
-					.Padding(InlinePadding)
+					.HAlign(HAlign_Center).VAlign(VAlign_Center)
 					[
 						SNew(STextBlock)
 						.Text(LOCTEXT("PLAYER_NAME", "Name:")).Font(TextStyle).ColorAndOpacity(Color)
 						.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+						.Justification(ETextJustify::Right)
+						.MinDesiredWidth(200.0f)
 					]
 					+ SHorizontalBox::Slot()
-					.HAlign(HAlign_Right).VAlign(VAlign_Center)
-					.Padding(InlinePadding)
+					.HAlign(HAlign_Left).VAlign(VAlign_Center)
 					[
 						SNew(SBorder)
 						.BorderBackgroundColor(FColor::Red)
 						[
 							SAssignNew(PlayerName, SEditableText)
 							.HintText(LOCTEXT("PLAYER_NAME_PLACEHOLDER", "Name")).Font(TextStyle).ColorAndOpacity(Color)
+							.MinDesiredWidth(400.0f)
 						]
 					]
 				]
@@ -65,16 +65,16 @@ void SMainMenu::Construct(const FArguments& InArgs)
 // note: Level input
 					SNew(SHorizontalBox)
 					+ SHorizontalBox::Slot()
-					.HAlign(HAlign_Left).VAlign(VAlign_Center)
-					.Padding(InlinePadding)
+					.HAlign(HAlign_Center).VAlign(VAlign_Center)
 					[
 						SNew(STextBlock)
 						.Text(LOCTEXT("LEVEL", "Level:")).Font(TextStyle).ColorAndOpacity(Color)
 						.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+						.Justification(ETextJustify::Right)
+						.MinDesiredWidth(200.0f)
 					]
 					+ SHorizontalBox::Slot()
-					.HAlign(HAlign_Right).VAlign(VAlign_Center)
-					.Padding(InlinePadding)
+					.HAlign(HAlign_Left).VAlign(VAlign_Center)
 					[
 						SNew(SBorder)
 						.BorderBackgroundColor(FColor::Red)
@@ -82,6 +82,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 							SAssignNew(LevelNumber, SSpinBox<int32>)
 							.Value(1).MinValue(1).MaxValue(5)
 							.Font(TextStyle)
+							.MinDesiredWidth(100.0f)
 						]
 					]
 				]
