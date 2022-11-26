@@ -116,24 +116,46 @@ bool SLevelHUD::SupportsKeyboardFocus() const
 	return false;
 }
 
-void SLevelHUD::SetPlayerName(FText NewPlayerName)
+void SLevelHUD::BindDelegates(FGameEvents::FLevelChanged& InLevelChanged,
+		FGameEvents::FEnemyCountChanged& InEnemyCountChanged)
 {
-	PlayerName->SetText(NewPlayerName);
+	InLevelChanged.BindLambda([this](int32 InLevelNumber) {
+		OnLevelChanged(InLevelNumber);
+	});
+	InEnemyCountChanged.AddLambda([this](int32 Remaining, int32 Destroyed) {
+		OnEnemyCountChanged(Remaining, Destroyed);
+	});
 }
 
-void SLevelHUD::SetLevelNumber(int32 NewLevelNumber)
+void SLevelHUD::OnLevelChanged(int32 InLevelNumber)
 {
-	LevelNumber->SetText(FText::AsNumber(NewLevelNumber));
+	SetLevelNumber(InLevelNumber);
 }
 
-void SLevelHUD::SetEnemiesRemaining(int32 NewEnemiesRemaining)
+void SLevelHUD::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)
 {
-	EnemiesRemaining->SetText(FText::AsNumber(NewEnemiesRemaining));
+	SetEnemiesRemaining(Remaining);
+	SetEnemiesDestroyed(Destroyed);
 }
 
-void SLevelHUD::SetEnemiesDestroyed(int32 NewEnemiesDestroyed)
+void SLevelHUD::SetPlayerName(FText InPlayerName)
 {
-	EnemiesDestroyed->SetText(FText::AsNumber(NewEnemiesDestroyed));
+	PlayerName->SetText(InPlayerName);
+}
+
+void SLevelHUD::SetLevelNumber(int32 InLevelNumber)
+{
+	LevelNumber->SetText(FText::AsNumber(InLevelNumber));
+}
+
+void SLevelHUD::SetEnemiesRemaining(int32 Remaining)
+{
+	EnemiesRemaining->SetText(FText::AsNumber(Remaining));
+}
+
+void SLevelHUD::SetEnemiesDestroyed(int32 Destroyed)
+{
+	EnemiesDestroyed->SetText(FText::AsNumber(Destroyed));
 }
 
 #undef LOCTEXT_NAMESPACE

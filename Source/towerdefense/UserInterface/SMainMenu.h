@@ -19,8 +19,9 @@ public:
 	void Construct(const FArguments& InArgs);
 	virtual bool SupportsKeyboardFocus() const override;
 
-	FGameEvents::FLevelRequested PlayClicked;
-	FGameEvents::FQuitRequested QuitClicked;
+	FText GetPlayerName() const;
+	void SetDelegates(FGameEvents::FPlayRequested& InPlayRequested,
+			FGameEvents::FQuitRequested& InQuitRequested);
 
 protected:
 	FReply OnPlayClicked() const;
@@ -28,4 +29,6 @@ protected:
 
 	TSharedPtr<class SEditableText> PlayerName;
 	TSharedPtr<class SSpinBox<int32>> LevelNumber;
+	FGameEvents::FPlayRequested PlayRequested;
+	FGameEvents::FQuitRequested QuitRequested;
 };

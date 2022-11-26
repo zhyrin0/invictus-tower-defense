@@ -17,18 +17,49 @@ ATowerDefenseHUD::ATowerDefenseHUD()
 void ATowerDefenseHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	MainMenu->PlayClicked.AddUObject(this, &ATowerDefenseHUD::OnMainMenuPlayClicked);
 	ShowMainMenu();
 }
 
-FGameEvents::FLevelRequested& ATowerDefenseHUD::GetLevelRequestedDelegate()
+void ATowerDefenseHUD::BindDelegates(FGameEvents::FLevelChanged& InLevelHUDLevelChanged,
+		FGameEvents::FEnemyCountChanged& InLevelHUDEnemyCountChanged,
+		FGameEvents::FPlayRequested& InPlayRequested,
+		FGameEvents::FLevelWon& InLevelWon,
+		FGameEvents::FLevelLost& InLevelLost,
+		FGameEvents::FGameWon& InGameWon)
 {
-	return MainMenu->PlayClicked;
+	LevelHUD->BindDelegates(InLevelHUDLevelChanged, InLevelHUDEnemyCountChanged);
+	InPlayRequested.AddUObject(this, &ATowerDefenseHUD::OnPlayRequested);
+	InLevelWon.BindUObject(this, &ATowerDefenseHUD::OnLevelWon);
+	InLevelLost.BindUObject(this, &ATowerDefenseHUD::OnLevelLost);
+	InGameWon.BindUObject(this, &ATowerDefenseHUD::OnGameWon);
 }
 
-FGameEvents::FQuitRequested& ATowerDefenseHUD::GetQuitRequestedDelegate()
+void ATowerDefenseHUD::SetDelegates(FGameEvents::FPlayRequested& InMainMenuPlayRequested,
+		FGameEvents::FQuitRequested& InMainMenuQuitRequested)
 {
-	return MainMenu->QuitClicked;
+	MainMenu->SetDelegates(InMainMenuPlayRequested, InMainMenuQuitRequested);
+}
+
+void ATowerDefenseHUD::OnPlayRequested(int32 _LevelNumber)
+{
+	HideMainMenu();
+	LevelHUD->SetPlayerName(MainMenu->GetPlayerName());
+	ShowLevelHUD();
+}
+
+void ATowerDefenseHUD::OnLevelWon()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("OnLevelWon"));
+}
+
+void ATowerDefenseHUD::OnLevelLost()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("OnLevelLost"));
+}
+
+void ATowerDefenseHUD::OnGameWon()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("OnGameWon"));
 }
 
 void ATowerDefenseHUD::ShowMainMenu()
@@ -49,14 +80,6 @@ void ATowerDefenseHUD::ShowLevelHUD()
 void ATowerDefenseHUD::HideLevelHUD()
 {
 	HideWidget(LevelHUD, LevelHUDContainer, false, FInputModeGameAndUI());
-}
-
-void ATowerDefenseHUD::OnMainMenuPlayClicked(FText _PlayerName, int32 _LevelNumber)
-{
-	HideMainMenu();
-	LevelHUD->SetPlayerName(_PlayerName);
-	LevelHUD->SetLevelNumber(_LevelNumber);
-	ShowLevelHUD();
 }
 
 void ATowerDefenseHUD::ShowWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,

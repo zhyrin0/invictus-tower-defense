@@ -15,19 +15,30 @@ class TOWERDEFENSE_API ATowerDefenseHUD : public AHUD
 public:
 	ATowerDefenseHUD();
 
+	void BindDelegates(FGameEvents::FLevelChanged& InLevelHUDLevelChanged,
+			FGameEvents::FEnemyCountChanged& InLevelHUDEnemyCountChanged,
+			FGameEvents::FPlayRequested& InPlayRequested,
+			FGameEvents::FLevelWon& InLevelWon,
+			FGameEvents::FLevelLost& InLevelLost,
+			FGameEvents::FGameWon& InGameWon);
+	void SetDelegates(FGameEvents::FPlayRequested& InMainMenuPlayRequested,
+			FGameEvents::FQuitRequested& InMainMenuQuitRequested);
+
+protected:
+	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnPlayRequested(int32 _LevelNumber);
+	UFUNCTION()
+	void OnLevelWon();
+	UFUNCTION()
+	void OnLevelLost();
+	UFUNCTION()
+	void OnGameWon();
+
 	void ShowMainMenu();
 	void HideMainMenu();
 	void ShowLevelHUD();
 	void HideLevelHUD();
-	FGameEvents::FLevelRequested& GetLevelRequestedDelegate();
-	FGameEvents::FQuitRequested& GetQuitRequestedDelegate();
-
-protected:
-	virtual void BeginPlay() override;
-	// note: Main menu doesn't use any of the delegate's arguments.
-	UFUNCTION()
-	void OnMainMenuPlayClicked(FText _PlayerName, int32 _LevelNumber);
-
 	void ShowWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,
 			EVisibility Visibility, bool UpdateInputMode, const FInputModeDataBase& InputMode);
 	void HideWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,

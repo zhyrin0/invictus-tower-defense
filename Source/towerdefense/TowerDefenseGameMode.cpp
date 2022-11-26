@@ -6,6 +6,7 @@
 #include "UserInterface/TowerDefenseHUD.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
+#include "GameEvents.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
 {
@@ -17,14 +18,24 @@ ATowerDefenseGameMode::ATowerDefenseGameMode()
 
 void ATowerDefenseGameMode::BeginPlay()
 {
+	ATowerDefenseGameState* LocalGameState = GetGameState<ATowerDefenseGameState>();
 	ATowerDefenseHUD* HUD = Cast<ATowerDefenseHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	HUD->GetLevelRequestedDelegate().AddUObject(this, &ATowerDefenseGameMode::OnLevelRequested);
-	HUD->GetQuitRequestedDelegate().BindUObject(this, &ATowerDefenseGameMode::OnQuitRequested);
-}
 
-void ATowerDefenseGameMode::OnLevelRequested(FText PlayerName, int32 LevelNumber)
-{
-	GetGameState<ATowerDefenseGameState>()->BeginLevel(TEXT("TestLevel"));
+	FGameEvents::FPlayRequested PlayRequested;
+	FGameEvents::FQuitRequested QuitRequested;
+	FGameEvents::FLevelChanged LevelChanged;
+	FGameEvents::FEnemyCountChanged EnemyCountChanged;
+	FGameEvents::FLastWaypointReached LastWaypointReached;
+	FGameEvents::FLevelWon LevelWon;
+	FGameEvents::FLevelLost LevelLost;
+	FGameEvents::FGameWon GameWon;
+
+	LocalGameState->BindDelegates(PlayRequested, EnemyCountChanged, LastWaypointReached);
+	HUD->BindDelegates(LevelChanged, EnemyCountChanged, PlayRequested, LevelWon, LevelLost, GameWon);
+	QuitRequested.BindUObject(this, &ATowerDefenseGameMode::OnQuitRequested);
+
+	LocalGameState->SetDelegates(EnemyCountChanged, LastWaypointReached, LevelChanged, LevelWon, LevelLost, GameWon);
+	HUD->SetDelegates(PlayRequested, QuitRequested);
 }
 
 void ATowerDefenseGameMode::OnQuitRequested()

@@ -94,7 +94,7 @@ void SMainMenu::Construct(const FArguments& InArgs)
 					.OnClicked(this, &SMainMenu::OnPlayClicked)
 					[
 						SNew(STextBlock)
-						.Text(LOCTEXT("START_GAME", "Start")).Font(TextStyle)
+						.Text(LOCTEXT("PLAY_GAME", "Play")).Font(TextStyle)
 					]
 				]
 				+ SVerticalBox::Slot()
@@ -121,15 +121,27 @@ bool SMainMenu::SupportsKeyboardFocus() const
 	return true;
 }
 
+FText SMainMenu::GetPlayerName() const
+{
+	return PlayerName->GetText();
+}
+
+void SMainMenu::SetDelegates(FGameEvents::FPlayRequested& InPlayRequested,
+		FGameEvents::FQuitRequested& InQuitRequested)
+{
+	PlayRequested = InPlayRequested;
+	QuitRequested = InQuitRequested;
+}
+
 FReply SMainMenu::OnPlayClicked() const
 {
-	PlayClicked.Broadcast(PlayerName->GetText(), LevelNumber->GetValue());
+	PlayRequested.Broadcast(LevelNumber->GetValue());
 	return FReply::Handled();
 }
 
 FReply SMainMenu::OnQuitClicked() const
 {
-	QuitClicked.ExecuteIfBound();
+	QuitRequested.ExecuteIfBound();
 	return FReply::Handled();
 }
 

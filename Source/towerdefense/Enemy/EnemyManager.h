@@ -8,6 +8,7 @@
 #include "Engine/EngineTypes.h"
 #include "UObject/ScriptInterface.h"
 #include "../Level/LevelDescriptor.h"
+#include "../GameEvents.h"
 #include "TargetableMixin.h"
 #include "EnemyManager.generated.h"
 
@@ -23,6 +24,8 @@ public:
 	AEnemyManager();
 
 	void BeginLevel(TArray<FGridPosition> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
+	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
+			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 
 	FEnemySpawned EnemySpawned;
 	FEnemyDestroyed EnemyDestroyed;
@@ -38,6 +41,9 @@ protected:
 	void OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin> Enemy);
 	UFUNCTION()
 	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
+
+	FGameEvents::FEnemyCountChanged EnemyCountChanged;
+	FGameEvents::FLastWaypointReached LastWaypointReached;
 
 	static constexpr float ZOffset = 30.0f;
 	UPROPERTY(VisibleAnywhere)

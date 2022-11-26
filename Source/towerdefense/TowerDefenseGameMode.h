@@ -18,7 +18,5 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnLevelRequested(FText PlayerName, int32 LevelNumber);
-	UFUNCTION()
 	void OnQuitRequested();
 };

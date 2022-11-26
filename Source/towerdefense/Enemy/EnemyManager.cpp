@@ -34,6 +34,13 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 	TimerManager.SetTimer(SpawnTimer, SpawnTimerTimeout, EnemySpawnCooldown, true, EnemySpawnDelay);
 }
 
+void AEnemyManager::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
+		FGameEvents::FLastWaypointReached& InLastWaypointReached)
+{
+	EnemyCountChanged = InEnemyCountChanged;
+	LastWaypointReached = InLastWaypointReached;
+}
+
 void AEnemyManager::Spawn()
 {
 	FVector SpawnLocation(Waypoints[0]);
@@ -71,6 +78,7 @@ void AEnemyManager::OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin
 {
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyLastWaypointReached"));
 	EnemyDestroyed.ExecuteIfBound(Enemy);
+	LastWaypointReached.ExecuteIfBound();
 }
 
 void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
@@ -82,4 +90,5 @@ void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
 	EnemyDestroyed.ExecuteIfBound(Enemy);
+	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
 }
