@@ -3,6 +3,7 @@
 #include "TowerDefenseGameState.h"
 #include "Level/LevelDescriptor.h"
 #include "Tower/SpawnTowerRequestMixin.h"
+#include "Enemy/TargetableMixin.h"
 
 void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 {
@@ -12,14 +13,15 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	LevelBuilder = World->SpawnActor<ALevelBuilderActor>();
 	EnemyManager = World->SpawnActor<AEnemyManager>();
 	TowerManager = World->SpawnActor<ATowerManager>();
-	EnemyManager->EnemySpawned.BindUObject(TowerManager, &ATowerManager::OnTargetSpawned);
-	EnemyManager->EnemyDestroyed.BindUObject(TowerManager, &ATowerManager::OnTargetDestroyed);
 }
 
 void ATowerDefenseGameState::BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 		FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 		FGameEvents::FLastWaypointReached& InLastWaypointReached)
 {
+	ITargetableMixin::FSpawned& EnemySpawned = EnemyManager->GetEnemySpawnedDelegate();
+	ITargetableMixin::FDestroyed& EnemyDestroyed = EnemyManager->GetEnemyDestroyedDelegate();
+	TowerManager->BindDelegates(EnemySpawned, EnemyDestroyed);
 	InPlayRequested.AddUObject(this, &ATowerDefenseGameState::OnPlayRequested);
 	InEnemyCountChanged.AddUObject(this, &ATowerDefenseGameState::OnEnemyCountChanged);
 	InLastWaypointReached.BindUObject(this, &ATowerDefenseGameState::OnLastWaypointReached);
@@ -53,12 +55,14 @@ void ATowerDefenseGameState::BeginLevel(FString LevelName) const
 	}
 	EnemyManager->BeginLevel(Descriptor->Waypoints, Descriptor->EnemyCount,
 			Descriptor->EnemySpawnDelay, Descriptor->EnemySpawnCooldown);
+	LevelChanged.ExecuteIfBound(CurrentLevel);
 }
 
 void ATowerDefenseGameState::OnPlayRequested(int32 LevelNumber)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 10.0, FColor::Red, TEXT("OnPlayRequested"));
 	CurrentLevel = LevelNumber;
+	BeginLevel(TEXT("TestLevel"));
 }
 
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)

@@ -26,9 +26,8 @@ public:
 	void BeginLevel(TArray<FGridPosition> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
 	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InLastWaypointReached);
-
-	FEnemySpawned EnemySpawned;
-	FEnemyDestroyed EnemyDestroyed;
+	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();
+	ITargetableMixin::FDestroyed& GetEnemyDestroyedDelegate();
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,10 +37,10 @@ protected:
 	UFUNCTION()
 	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
 	UFUNCTION()
-	void OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin> Enemy);
-	UFUNCTION()
 	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
 
+	ITargetableMixin::FSpawned EnemySpawned;
+	ITargetableMixin::FDestroyed EnemyDestroyed;
 	FGameEvents::FEnemyCountChanged EnemyCountChanged;
 	FGameEvents::FLastWaypointReached LastWaypointReached;
 

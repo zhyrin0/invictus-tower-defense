@@ -32,6 +32,7 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 	EnemiesDestroyed = 0;
 	SpawnTimer = FTimerHandle();
 	TimerManager.SetTimer(SpawnTimer, SpawnTimerTimeout, EnemySpawnCooldown, true, EnemySpawnDelay);
+	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
 }
 
 void AEnemyManager::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
@@ -41,12 +42,21 @@ void AEnemyManager::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountCh
 	LastWaypointReached = InLastWaypointReached;
 }
 
+ITargetableMixin::FSpawned& AEnemyManager::GetEnemySpawnedDelegate()
+{
+	return EnemySpawned;
+}
+
+ITargetableMixin::FDestroyed& AEnemyManager::GetEnemyDestroyedDelegate()
+{
+	return EnemyDestroyed;
+}
+
 void AEnemyManager::Spawn()
 {
 	FVector SpawnLocation(Waypoints[0]);
 	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
 	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
-	Enemy->LastWaypointReached.BindUObject(this, &AEnemyManager::OnEnemyLastWaypointReached);
 	Enemy->TargetDestroyed.AddUObject(this, &AEnemyManager::OnEnemyDestroyed);
 	--EnemiesToSpawn;
 	if (EnemiesToSpawn < 1) {
@@ -61,24 +71,14 @@ void AEnemyManager::Spawn()
 
 bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint)
 {
-	bool IsNextWaypoint = false;
-	for (FVector Waypoint : Waypoints) {
-		if (IsNextWaypoint) {
-			OutNextWaypoint = Waypoint;
+	for (int32 i = 1; i < Waypoints.Num(); ++i) {
+		if (CurrentWaypoint.Equals(Waypoints[i - 1])) {
+			OutNextWaypoint = Waypoints[i];
 			return false;
 		}
-		if (CurrentWaypoint.Equals(Waypoint, 0.5)) {
-			IsNextWaypoint = true;
-		}
 	}
-	return true;
-}
-
-void AEnemyManager::OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin> Enemy)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyLastWaypointReached"));
-	EnemyDestroyed.ExecuteIfBound(Enemy);
 	LastWaypointReached.ExecuteIfBound();
+	return true;
 }
 
 void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
@@ -89,6 +89,6 @@ void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("All enemies defeated!"));
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
-	EnemyDestroyed.ExecuteIfBound(Enemy);
+	EnemyDestroyed.Broadcast(Enemy);
 	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
 }

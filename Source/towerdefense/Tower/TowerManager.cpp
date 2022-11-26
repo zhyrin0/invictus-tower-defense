@@ -21,6 +21,13 @@ void ATowerManager::Tick(float DeltaTime)
 	}
 }
 
+void ATowerManager::BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
+		ITargetableMixin::FDestroyed& InTargetDestroyed)
+{
+	InTargetSpawned.BindUObject(this, &ATowerManager::OnTargetSpawned);
+	InTargetDestroyed.AddUObject(this, &ATowerManager::OnTargetDestroyed);
+}
+
 void ATowerManager::Spawn(FVector Location)
 {
 	Location.Z += ZOffset;

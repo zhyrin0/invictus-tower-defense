@@ -16,7 +16,6 @@ class TOWERDEFENSE_API AEnemy : public AActor, public ITargetableMixin
 
 public:
 	DECLARE_DELEGATE_RetVal_TwoParams(bool, FRequestNextWaypoint, FVector, FVector&)
-	DECLARE_DELEGATE_OneParam(FLastWaypointReached, TScriptInterface<ITargetableMixin> Enemy)
 
 	AEnemy();
 
@@ -28,7 +27,6 @@ public:
 	virtual FVector GetTargetLocation() const override;
 
 	FRequestNextWaypoint RequestNextWaypoint;
-	FLastWaypointReached LastWaypointReached;
 
 protected:
 	void DoRequestNextWaypoint();

@@ -19,11 +19,9 @@ public:
 	ATowerManager();
 
 	virtual void Tick(float DeltaTime) override;
+	void BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
+			ITargetableMixin::FDestroyed& InTargetDestroyed);
 	void Spawn(FVector Location);
-	UFUNCTION()
-	void OnTargetSpawned(TScriptInterface<ITargetableMixin> Target);
-	UFUNCTION()
-	void OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target);
 
 protected:
 	using FTargetLocationMap = TMap<TScriptInterface<ITargetableMixin>, FVector>;
@@ -31,6 +29,11 @@ protected:
 	void SelectTargets() const;
 	FTargetLocationMap GetTargetMap() const;
 	TScriptInterface<ITargetableMixin> GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const;
+
+	UFUNCTION()
+	void OnTargetSpawned(TScriptInterface<ITargetableMixin> Target);
+	UFUNCTION()
+	void OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target);
 
 
 	UPROPERTY(EditAnywhere)
