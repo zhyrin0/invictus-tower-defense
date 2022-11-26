@@ -47,6 +47,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	int32 EnemiesRemaining;
 	UPROPERTY(VisibleAnywhere)
+	int32 EnemiesDestroyed;
+	UPROPERTY(VisibleAnywhere)
 	FTimerHandle SpawnTimer;
 	FTimerDelegate SpawnTimerTimeout;
 };

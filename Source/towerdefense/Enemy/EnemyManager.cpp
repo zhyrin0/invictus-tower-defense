@@ -29,6 +29,7 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 	}
 	EnemiesToSpawn = EnemyCount;
 	EnemiesRemaining = EnemiesToSpawn;
+	EnemiesDestroyed = 0;
 	SpawnTimer = FTimerHandle();
 	TimerManager.SetTimer(SpawnTimer, SpawnTimerTimeout, EnemySpawnCooldown, true, EnemySpawnDelay);
 }
@@ -75,6 +76,7 @@ void AEnemyManager::OnEnemyLastWaypointReached(TScriptInterface<ITargetableMixin
 void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 {
 	--EnemiesRemaining;
+	++EnemiesDestroyed;
 	if (EnemiesRemaining < 1) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("All enemies defeated!"));
 	}
