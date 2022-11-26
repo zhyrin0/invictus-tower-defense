@@ -28,17 +28,18 @@ AProjectile::AProjectile()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnBeginOverlap);
 }
 
-void AProjectile::Initialize(TScriptInterface<ITargetableMixin> pTarget)
+void AProjectile::Initialize(TScriptInterface<ITargetableMixin> InTarget)
 {
 	SpawnLocation = GetActorLocation();
-	Target = pTarget;
+	Target = InTarget;
+	InTarget->TargetDestroyed.AddUObject(this, &AProjectile::OnTargetDestroyed);
 }
 
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	TravelDelta += DeltaTime;
-	if (!Target || TravelDelta > TravelTime) {
+	if (TravelDelta > TravelTime) {
 		Destroy();
 		return;
 	}
@@ -53,4 +54,9 @@ void AProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 		UGameplayStatics::ApplyDamage(OtherActor, 1.0f, nullptr, nullptr, UDamageType::StaticClass());
 		Destroy();
 	}
+}
+
+void AProjectile::OnTargetDestroyed(TScriptInterface<ITargetableMixin> InTarget)
+{
+	Destroy();
 }

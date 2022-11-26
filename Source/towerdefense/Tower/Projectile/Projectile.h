@@ -18,13 +18,16 @@ class TOWERDEFENSE_API AProjectile : public AActor
 public:
 	AProjectile();
 
-	void Initialize(TScriptInterface<ITargetableMixin> pTarget);
+	void Initialize(TScriptInterface<ITargetableMixin> InTarget);
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 protected:
+	UFUNCTION()
+	void OnTargetDestroyed(TScriptInterface<ITargetableMixin> InTarget);
+
 	UPROPERTY(VisibleAnywhere)
 	float TravelTime;
 	UPROPERTY(VisibleAnywhere)
