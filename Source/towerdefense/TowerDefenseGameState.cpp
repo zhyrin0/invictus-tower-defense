@@ -74,6 +74,9 @@ void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)
 {
 	if (Remaining < 1) {
+		LevelBuilder->ClearLevel();
+		EnemyManager->ClearLevel();
+		TowerManager->ClearLevel();
 		if (CurrentLevel == LevelAggregator->Levels.Num()) {
 			GameWon.ExecuteIfBound();
 		} else {

@@ -2,6 +2,7 @@
 
 #include "EnemyManager.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "Math/Vector2D.h"
 
 #include "Enemy.h"
@@ -15,6 +16,15 @@ AEnemyManager::AEnemyManager()
 void AEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AEnemyManager::ClearLevel()
+{
+	TArray<AActor*> Enemies;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy::StaticClass(), Enemies);
+	for (AActor* Enemy : Enemies) {
+		Enemy->Destroy();
+	}
 }
 
 void AEnemyManager::BeginLevel(TArray<FVector2D> InWaypoints,

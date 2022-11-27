@@ -21,6 +21,7 @@ class TOWERDEFENSE_API ALevelBuilder : public AActor
 public:
 	ALevelBuilder();
 
+	void ClearLevel();
 	// note: Returns a list of spawn request delegates of the empty tiles.
 	FSpawnTowerRequestList BuildLevel(int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const;
 

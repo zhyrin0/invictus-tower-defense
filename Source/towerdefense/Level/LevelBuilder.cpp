@@ -3,6 +3,7 @@
 #include "LevelBuilder.h"
 
 #include "Engine/StaticMesh.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "Tile/Tile.h"
 #include "Tile/TileData.h"
@@ -15,6 +16,15 @@ ALevelBuilder::ALevelBuilder()
 	
 	PrimaryActorTick.bCanEverTick = false;
 	BuildTileMap(TileAsset.Object);
+}
+
+void ALevelBuilder::ClearLevel()
+{
+	TArray<AActor*> Tiles;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATile::StaticClass(), Tiles);
+	for (AActor* Tile : Tiles) {
+		Tile->Destroy();
+	}
 }
 
 FSpawnTowerRequestList ALevelBuilder::BuildLevel(

@@ -29,6 +29,15 @@ void ATowerManager::BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
 	InTargetDestroyed.AddUObject(this, &ATowerManager::OnTargetDestroyed);
 }
 
+void ATowerManager::ClearLevel()
+{
+	for (ATower* Tower : Towers) {
+		Tower->Destroy();
+	}
+	Towers.Empty();
+	Targets.Empty();
+}
+
 void ATowerManager::Spawn(FVector Location)
 {
 	Location.Z += ZOffset;
