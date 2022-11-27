@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EnemyManager.h"
+
+#include "Math/Vector2D.h"
+
 #include "Enemy.h"
 
 AEnemyManager::AEnemyManager()
@@ -14,7 +17,7 @@ void AEnemyManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
+void AEnemyManager::BeginLevel(TArray<FVector2D> pWaypoints,
 		int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown)
 {
 	FTimerManager& TimerManager = GetWorldTimerManager();
@@ -24,8 +27,8 @@ void AEnemyManager::BeginLevel(TArray<FGridPosition> pWaypoints,
 	}
 	Waypoints.Empty();
 	Waypoints.Reserve(pWaypoints.Num());
-	for (FGridPosition& GridPosition : pWaypoints) {
-		Waypoints.Emplace(GridPosition.XPosition * 100.0f, GridPosition.YPosition * 100.0f, ZOffset);
+	for (FVector2D& GridPosition : pWaypoints) {
+		Waypoints.Emplace(GridPosition.X * 100.0f, GridPosition.Y * 100.0f, ZOffset);
 	}
 	EnemiesToSpawn = EnemyCount;
 	EnemiesRemaining = EnemiesToSpawn;

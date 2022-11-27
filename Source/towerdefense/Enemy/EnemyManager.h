@@ -3,13 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "TimerManager.h"
 #include "Engine/EngineTypes.h"
+#include "GameFramework/Actor.h"
+#include "Math/UnrealMathUtility.h"
+#include "TimerManager.h"
 #include "UObject/ScriptInterface.h"
-#include "../Level/LevelDescriptor.h"
+
+#include "../Level/LevelData.h"
 #include "../GameEvents.h"
 #include "TargetableMixin.h"
+
 #include "EnemyManager.generated.h"
 
 UCLASS()
@@ -23,7 +26,7 @@ public:
 
 	AEnemyManager();
 
-	void BeginLevel(TArray<FGridPosition> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
+	void BeginLevel(TArray<FVector2D> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
 	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();

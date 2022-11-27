@@ -4,23 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "VectorTypes.h"
-#include "LevelDescriptor.generated.h"
+#include "Math/Vector2D.h"
 
-USTRUCT()
-struct FGridPosition
-{
-	GENERATED_BODY()
-
-public:
-	FGridPosition();
-
-	UPROPERTY(EditAnywhere)
-	int32 XPosition;
-
-	UPROPERTY(EditAnywhere)
-	int32 YPosition;
-};
+#include "LevelData.generated.h"
 
 UENUM()
 enum class ETileRotation : uint8
@@ -40,39 +26,33 @@ public:
 	FTilePlacement();
 
 	UPROPERTY(EditAnywhere)
-	FGridPosition Position;
-
-	UPROPERTY(EditAnywhere)
 	FString TileName;
-
+	UPROPERTY(EditAnywhere)
+	FVector2D Position;
 	UPROPERTY(EditAnywhere)
 	ETileRotation Rotation;
 };
 
 UCLASS()
-class TOWERDEFENSE_API ULevelDescriptor : public UPrimaryDataAsset
+class TOWERDEFENSE_API ULevelData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
 public:
+	ULevelData();
+
 	UPROPERTY(EditAnywhere)
 	int32 Width;
-
 	UPROPERTY(EditAnywhere)
 	int32 Height;
-
 	UPROPERTY(EditAnywhere)
 	TArray<FTilePlacement> Tiles;
-
 	UPROPERTY(EditAnywhere)
-	TArray<FGridPosition> Waypoints;
-
+	TArray<FVector2D> Waypoints;
 	UPROPERTY(EditAnywhere)
 	int32 EnemyCount;
-
 	UPROPERTY(EditAnywhere)
 	float EnemySpawnDelay;
-
 	UPROPERTY(EditAnywhere)
 	float EnemySpawnCooldown;
 };

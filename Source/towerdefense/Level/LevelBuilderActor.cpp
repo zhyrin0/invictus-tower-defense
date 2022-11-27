@@ -6,7 +6,7 @@
 
 #include "Tile/Tile.h"
 #include "Tile/TileData.h"
-#include "LevelDescriptor.h"
+#include "LevelData.h"
 
 ALevelBuilderActor::ALevelBuilderActor()
 {
@@ -24,7 +24,7 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
 	FString EmptyTileName = TEXT("Empty");
 	UWorld* World = GetWorld();
 	for (FTilePlacement& Placement : Tiles) {
-		FVector TileLocation(Placement.Position.XPosition, Placement.Position.YPosition, 0.0);
+		FVector TileLocation(Placement.Position, 0.0f);
 		TileLocation *= TILE_SIZE;
 		uint8 RotationCount = static_cast<uint8>(Placement.Rotation);
 		FRotator TileRotation(0.0f, 90.0f * RotationCount, 0.0f);

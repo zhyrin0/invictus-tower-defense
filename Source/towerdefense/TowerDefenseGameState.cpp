@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseGameState.h"
-#include "Level/LevelDescriptor.h"
+#include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
 #include "Enemy/TargetableMixin.h"
 
@@ -43,31 +43,29 @@ void ATowerDefenseGameState::SetDelegates(FGameEvents::FEnemyCountChanged& InEne
 
 void ATowerDefenseGameState::BeginLevel(FString LevelName) const
 {
-	FString Reference = FString::Printf(TEXT("LevelDescriptor'/Game/Level/%s.%s'"), *LevelName, *LevelName);
-	ULevelDescriptor* Descriptor = LoadObject<ULevelDescriptor>(NULL, *Reference, NULL, LOAD_None, NULL);
-	if (Descriptor == nullptr) {
+	FString Reference = FString::Printf(TEXT("LevelData'/Game/Level/%s.%s'"), *LevelName, *LevelName);
+	ULevelData* Data = LoadObject<ULevelData>(NULL, *Reference, NULL, LOAD_None, NULL);
+	if (Data == nullptr) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Couldn't load level."));
 		return;
 	}
-	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Descriptor->Width, Descriptor->Height, Descriptor->Tiles);
+	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Data->Width, Data->Height, Data->Tiles);
 	for (auto Request : Requests) {
 		Request->BindUObject(TowerManager, &ATowerManager::Spawn);
 	}
-	EnemyManager->BeginLevel(Descriptor->Waypoints, Descriptor->EnemyCount,
-			Descriptor->EnemySpawnDelay, Descriptor->EnemySpawnCooldown);
+	EnemyManager->BeginLevel(Data->Waypoints, Data->EnemyCount,
+			Data->EnemySpawnDelay, Data->EnemySpawnCooldown);
 	LevelChanged.ExecuteIfBound(CurrentLevel);
 }
 
 void ATowerDefenseGameState::OnPlayRequested(int32 LevelNumber)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0, FColor::Red, TEXT("OnPlayRequested"));
 	CurrentLevel = LevelNumber;
-	BeginLevel(TEXT("TestLevel"));
+	BeginLevel(FString::FormatAsNumber(LevelNumber));
 }
 
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0, FColor::Red, TEXT("OnEnemyCountChanged"));
 	if (Remaining < 1) {
 		static constexpr int LAST_LEVEL = -1;
 		if (CurrentLevel == LAST_LEVEL) {
@@ -75,7 +73,7 @@ void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroye
 		} else {
 			LevelWon.ExecuteIfBound();
 			++CurrentLevel;
-			// Start Next Level
+			// todo: Start next level
 			LevelChanged.ExecuteIfBound(CurrentLevel);
 		}
 	}
@@ -83,6 +81,5 @@ void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroye
 
 void ATowerDefenseGameState::OnLastWaypointReached()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0, FColor::Red, TEXT("OnLastWaypointReached"));
 	LevelLost.ExecuteIfBound();
 }
