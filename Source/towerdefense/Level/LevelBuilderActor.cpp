@@ -3,14 +3,17 @@
 #include "LevelBuilderActor.h"
 
 #include "Engine/StaticMesh.h"
-#include "Tile/TileActor.h"
+
+#include "Tile/Tile.h"
+#include "Tile/TileData.h"
+#include "LevelDescriptor.h"
 
 ALevelBuilderActor::ALevelBuilderActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	auto TilesAsset = ConstructorHelpers::FObjectFinder<UTileDescriptors>(
-		TEXT("TileDescriptors'/Game/Level/Tile/TileDescriptors.TileDescriptors'"));
-	TileDB = TilesAsset.Object;
+	static auto TileAsset = ConstructorHelpers::FObjectFinder<UTileData>(
+			TEXT("TileData'/Game/Level/Tile/TileData.TileData'"));
+	BuildTileMap(TileAsset.Object);
 }
 
 FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
@@ -32,7 +35,7 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
 			Meshes.Add(Mesh);
 		}
 
-		ATileActor* Tile = World->SpawnActor<ATileActor>(TileLocation, TileRotation);
+		ATile* Tile = World->SpawnActor<ATile>(TileLocation, TileRotation);
 		Tile->Initialize(Meshes);
 		if (Placement.TileName == EmptyTileName) {
 			Result.Add(&(Tile->SpawnTowerRequest));
@@ -42,14 +45,7 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
 	return Result;
 }
 
-void ALevelBuilderActor::BeginPlay()
-{
-	Super::BeginPlay();
-	BuildTileMap();
-	BeganPlay.ExecuteIfBound(TEXT("TestLevel"));
-}
-
-void ALevelBuilderActor::BuildTileMap()
+void ALevelBuilderActor::BuildTileMap(UTileData* TileDB)
 {
 	if (TileDB == nullptr) {
 		return;

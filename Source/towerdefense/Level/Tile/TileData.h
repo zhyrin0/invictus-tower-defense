@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "UObject/SoftObjectPtr.h"
-#include "TileDescriptors.generated.h"
+
+#include "TileData.generated.h"
 
 USTRUCT()
 struct FTileDescriptor
@@ -21,7 +22,7 @@ public:
 };
 
 UCLASS()
-class TOWERDEFENSE_API UTileDescriptors : public UPrimaryDataAsset
+class TOWERDEFENSE_API UTileData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 

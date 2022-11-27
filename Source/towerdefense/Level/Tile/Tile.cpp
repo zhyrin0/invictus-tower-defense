@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TileActor.h"
-#include "Components/StaticMeshComponent.h"
-#include "../../Tower/Tower.h"
+#include "Tile.h"
 
-ATileActor::ATileActor()
+#include "Components/StaticMeshComponent.h"
+
+ATile::ATile()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
-void ATileActor::Initialize(TArray<UStaticMesh*> Meshes)
+void ATile::Initialize(TArray<UStaticMesh*> Meshes)
 {
 	for (UStaticMesh* Mesh : Meshes) {
 		UStaticMeshComponent* Component = NewObject<UStaticMeshComponent>(this);
@@ -20,18 +20,16 @@ void ATileActor::Initialize(TArray<UStaticMesh*> Meshes)
 	}
 }
 
-void ATileActor::NotifyActorOnClicked(FKey ButtonPressed)
+void ATile::NotifyActorOnClicked(FKey ButtonPressed)
 {
 	Super::NotifyActorOnClicked(ButtonPressed);
 	if (CanPlaceTower()) {
 		SpawnTowerRequest.Execute(GetActorLocation());
 		SpawnTowerRequest.Unbind();
-	} else {
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Nothing happens."));
 	}
 }
 
-bool ATileActor::CanPlaceTower() const
+bool ATile::CanPlaceTower() const
 {
 	return SpawnTowerRequest.IsBound();
 }

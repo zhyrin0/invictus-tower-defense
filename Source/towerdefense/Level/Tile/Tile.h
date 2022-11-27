@@ -4,19 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Engine/StaticMesh.h"
+
 #include "../../Tower/SpawnTowerRequestMixin.h"
-#include "TileActor.generated.h"
+
+#include "Tile.generated.h"
+
+class UStaticMesh;
 
 UCLASS()
-class TOWERDEFENSE_API ATileActor : public AActor, public ISpawnTowerRequestMixin
+class TOWERDEFENSE_API ATile : public AActor, public ISpawnTowerRequestMixin
 {
 	GENERATED_BODY()
 
 public:
-	ATileActor();
+	ATile();
 
 	void Initialize(TArray<UStaticMesh*> Meshes);
 	virtual void NotifyActorOnClicked(FKey ButtonPressed) override;
+
+protected:
 	bool CanPlaceTower() const;
 };
