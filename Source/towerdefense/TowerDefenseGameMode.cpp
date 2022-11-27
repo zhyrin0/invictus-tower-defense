@@ -3,6 +3,7 @@
 #include "TowerDefenseGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Level/CameraPawn.h"
+#include "Level/LevelAggregator.h"
 #include "UserInterface/TowerDefenseHUD.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
@@ -36,6 +37,10 @@ void ATowerDefenseGameMode::BeginPlay()
 
 	LocalGameState->SetDelegates(EnemyCountChanged, LastWaypointReached, LevelChanged, LevelWon, LevelLost, GameWon);
 	HUD->SetDelegates(PlayRequested, QuitRequested);
+
+	FString LevelAggregatorReference = TEXT("LevelAggregator'/Game/Level/LevelAggregator.LevelAggregator'");
+	ULevelAggregator* Aggregator = LoadObject<ULevelAggregator>(NULL, *LevelAggregatorReference, NULL, LOAD_None, NULL);
+	HUD->SetMaxLevelNumber(Aggregator->Levels.Num());
 }
 
 void ATowerDefenseGameMode::OnQuitRequested()

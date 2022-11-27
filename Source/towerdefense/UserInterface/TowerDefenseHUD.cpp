@@ -40,6 +40,11 @@ void ATowerDefenseHUD::SetDelegates(FGameEvents::FPlayRequested& InMainMenuPlayR
 	MainMenu->SetDelegates(InMainMenuPlayRequested, InMainMenuQuitRequested);
 }
 
+void ATowerDefenseHUD::SetMaxLevelNumber(int32 MaxLevelNumber)
+{
+	MainMenu->SetMaxLevelNumber(MaxLevelNumber);
+}
+
 void ATowerDefenseHUD::OnPlayRequested(int32 _LevelNumber)
 {
 	HideMainMenu();

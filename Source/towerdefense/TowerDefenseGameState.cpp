@@ -1,9 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseGameState.h"
+#include "Level/LevelAggregator.h"
 #include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
 #include "Enemy/TargetableMixin.h"
+
+ATowerDefenseGameState::ATowerDefenseGameState()
+{
+	static auto LevelAggregatorAsset = ConstructorHelpers::FObjectFinder<ULevelAggregator>(
+		TEXT("LevelAggregator'/Game/Level/LevelAggregator.LevelAggregator'"));
+
+	LevelAggregator = LevelAggregatorAsset.Object;
+}
 
 void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 {
@@ -41,40 +50,36 @@ void ATowerDefenseGameState::SetDelegates(FGameEvents::FEnemyCountChanged& InEne
 	GameWon = InGameWon;
 }
 
-void ATowerDefenseGameState::BeginLevel(FString LevelName) const
-{
-	FString Reference = FString::Printf(TEXT("LevelData'/Game/Level/%s.%s'"), *LevelName, *LevelName);
-	ULevelData* Data = LoadObject<ULevelData>(NULL, *Reference, NULL, LOAD_None, NULL);
-	if (Data == nullptr) {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Couldn't load level."));
-		return;
-	}
-	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Data->Width, Data->Height, Data->Tiles);
-	for (auto Request : Requests) {
-		Request->BindUObject(TowerManager, &ATowerManager::Spawn);
-	}
-	EnemyManager->BeginLevel(Data->Waypoints, Data->EnemyCount,
-			Data->EnemySpawnDelay, Data->EnemySpawnCooldown);
-	LevelChanged.ExecuteIfBound(CurrentLevel);
-}
-
 void ATowerDefenseGameState::OnPlayRequested(int32 LevelNumber)
 {
 	CurrentLevel = LevelNumber;
-	BeginLevel(FString::FormatAsNumber(LevelNumber));
+	BeginLevel(LevelAggregator->Levels[CurrentLevel - 1].LoadSynchronous());
+}
+
+void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
+{
+	if (Level == nullptr) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Couldn't load level."));
+		return;
+	}
+	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Level->Width, Level->Height, Level->Tiles);
+	for (auto Request : Requests) {
+		Request->BindUObject(TowerManager, &ATowerManager::Spawn);
+	}
+	EnemyManager->BeginLevel(Level->Waypoints, Level->EnemyCount,
+							 Level->EnemySpawnDelay, Level->EnemySpawnCooldown);
+	LevelChanged.ExecuteIfBound(CurrentLevel);
 }
 
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)
 {
 	if (Remaining < 1) {
-		static constexpr int LAST_LEVEL = -1;
-		if (CurrentLevel == LAST_LEVEL) {
+		if (CurrentLevel == LevelAggregator->Levels.Num()) {
 			GameWon.ExecuteIfBound();
 		} else {
 			LevelWon.ExecuteIfBound();
 			++CurrentLevel;
-			// todo: Start next level
-			LevelChanged.ExecuteIfBound(CurrentLevel);
+			BeginLevel(LevelAggregator->Levels[CurrentLevel - 1].LoadSynchronous());
 		}
 	}
 }

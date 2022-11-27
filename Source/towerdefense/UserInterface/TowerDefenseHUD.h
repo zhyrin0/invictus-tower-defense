@@ -23,6 +23,7 @@ public:
 			FGameEvents::FGameWon& InGameWon);
 	void SetDelegates(FGameEvents::FPlayRequested& InMainMenuPlayRequested,
 			FGameEvents::FQuitRequested& InMainMenuQuitRequested);
+	void SetMaxLevelNumber(int32 MaxLevelNumber);
 
 protected:
 	virtual void BeginPlay() override;

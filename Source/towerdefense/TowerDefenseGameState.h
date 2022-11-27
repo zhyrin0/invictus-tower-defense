@@ -10,12 +10,17 @@
 #include "GameEvents.h"
 #include "TowerDefenseGameState.generated.h"
 
+class ULevelAggregator;
+class ULevelData;
+
 UCLASS()
 class TOWERDEFENSE_API ATowerDefenseGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 
 public:
+	ATowerDefenseGameState();
+
 	virtual void OnConstruction(const FTransform& Transform) override;
 	void BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 			FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
@@ -28,7 +33,7 @@ public:
 			FGameEvents::FGameWon& InGameWon);
 
 protected:
-	void BeginLevel(FString LevelName) const;
+	void BeginLevel(ULevelData* Level) const;
 	UFUNCTION()
 	void OnPlayRequested(int32 LevelNumber);
 	UFUNCTION()
@@ -43,6 +48,8 @@ protected:
 
 	UPROPERTY()
 	int32 CurrentLevel;
+	UPROPERTY()
+	ULevelAggregator* LevelAggregator;
 
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilder* LevelBuilder;

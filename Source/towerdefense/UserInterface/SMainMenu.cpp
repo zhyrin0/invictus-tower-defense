@@ -134,6 +134,11 @@ void SMainMenu::SetDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 	QuitRequested = InQuitRequested;
 }
 
+void SMainMenu::SetMaxLevelNumber(int32 MaxLevelNumber)
+{
+	LevelNumber->SetMaxValue(MaxLevelNumber);
+}
+
 FReply SMainMenu::OnPlayClicked() const
 {
 	PlayRequested.Broadcast(LevelNumber->GetValue());

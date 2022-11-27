@@ -22,6 +22,7 @@ public:
 	FText GetPlayerName() const;
 	void SetDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 			FGameEvents::FQuitRequested& InQuitRequested);
+	void SetMaxLevelNumber(int32 MaxLevelNumber);
 
 protected:
 	FReply OnPlayClicked() const;
