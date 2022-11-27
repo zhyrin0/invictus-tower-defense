@@ -2,7 +2,7 @@
 
 #include "TileActor.h"
 #include "Components/StaticMeshComponent.h"
-#include "../../Tower/TowerActor.h"
+#include "../../Tower/Tower.h"
 
 ATileActor::ATileActor()
 {

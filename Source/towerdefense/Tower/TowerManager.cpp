@@ -3,7 +3,7 @@
 #include "TowerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/NumericLimits.h"
-#include "TowerActor.h"
+#include "Tower.h"
 
 ATowerManager::ATowerManager()
 	: TargetingFequency(10.0f), TargetingDelta(0.0f), ZOffset(20)
@@ -33,7 +33,7 @@ void ATowerManager::Spawn(FVector Location)
 	Location.Z += ZOffset;
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
 			FString::Printf(TEXT("Tower placed at %.0fx%.0f."), Location.X / 100.0f, Location.Y / 100.0f));
-	Towers.Add(GetWorld()->SpawnActor<ATowerActor>(Location, FRotator()));
+	Towers.Add(GetWorld()->SpawnActor<ATower>(Location, FRotator()));
 }
 
 void ATowerManager::OnTargetSpawned(TScriptInterface<ITargetableMixin> Target)
@@ -57,13 +57,13 @@ void ATowerManager::SelectTargets() const
 	}
 	if (Targets.IsEmpty()) {
 		TScriptInterface<ITargetableMixin> InvalidTarget;
-		for (ATowerActor* Tower : Towers) {
+		for (ATower* Tower : Towers) {
 			Tower->SetTarget(InvalidTarget);
 		}
 		return;
 	}
 	FTargetLocationMap TargetMap = GetTargetMap();
-	for (ATowerActor* Tower : Towers) {
+	for (ATower* Tower : Towers) {
 		Tower->SetTarget(GetNearestTarget(Tower->GetActorLocation(), GetTargetMap()));
 	}
 }

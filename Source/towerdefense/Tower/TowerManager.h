@@ -8,7 +8,7 @@
 #include "../Enemy/TargetableMixin.h"
 #include "TowerManager.generated.h"
 
-class ATowerActor;
+class ATower;
 
 UCLASS()
 class TOWERDEFENSE_API ATowerManager : public AActor
@@ -43,7 +43,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	int32 ZOffset;
 	UPROPERTY(VisibleAnywhere)
-	TArray<ATowerActor*> Towers;
+	TArray<ATower*> Towers;
 	UPROPERTY(VisibleAnywhere)
 	TArray<TScriptInterface<ITargetableMixin>> Targets;
 };
