@@ -17,7 +17,7 @@ void AEnemyManager::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AEnemyManager::BeginLevel(TArray<FVector2D> pWaypoints,
+void AEnemyManager::BeginLevel(TArray<FVector2D> InWaypoints,
 		int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown)
 {
 	FTimerManager& TimerManager = GetWorldTimerManager();
@@ -26,8 +26,8 @@ void AEnemyManager::BeginLevel(TArray<FVector2D> pWaypoints,
 		TimerManager.ClearTimer(SpawnTimer);
 	}
 	Waypoints.Empty();
-	Waypoints.Reserve(pWaypoints.Num());
-	for (FVector2D& GridPosition : pWaypoints) {
+	Waypoints.Reserve(InWaypoints.Num());
+	for (FVector2D& GridPosition : InWaypoints) {
 		Waypoints.Emplace(GridPosition.X * 100.0f, GridPosition.Y * 100.0f, ZOffset);
 	}
 	EnemiesToSpawn = EnemyCount;
@@ -59,7 +59,7 @@ void AEnemyManager::Spawn()
 {
 	--EnemiesToSpawn;
 	FVector SpawnLocation(Waypoints[0]);
-	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
+	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator::ZeroRotator);
 	AEnemy::FRequestNextWaypoint RequestNextWaypoint;
 	RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
 	Enemy->SetDelegate(RequestNextWaypoint);
@@ -89,10 +89,6 @@ void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 {
 	--EnemiesRemaining;
 	++EnemiesDestroyed;
-	if (EnemiesRemaining < 1) {
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("All enemies defeated!"));
-	}
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, TEXT("OnEnemyDestroyed"));
 	EnemyDestroyed.Broadcast(Enemy);
 	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
 }

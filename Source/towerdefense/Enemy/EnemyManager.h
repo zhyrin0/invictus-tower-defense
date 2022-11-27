@@ -26,7 +26,7 @@ public:
 
 	AEnemyManager();
 
-	void BeginLevel(TArray<FVector2D> pWaypoints, int32 EnemyCount, float pEnemySpawnDelay, float pEnemySpawnCooldown);
+	void BeginLevel(TArray<FVector2D> InWaypoints, int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown);
 	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();
@@ -48,15 +48,10 @@ protected:
 	FGameEvents::FLastWaypointReached LastWaypointReached;
 
 	static constexpr float ZOffset = 30.0f;
-	UPROPERTY(VisibleAnywhere)
 	TArray<FVector> Waypoints;
-	UPROPERTY(VisibleAnywhere)
 	int32 EnemiesToSpawn;
-	UPROPERTY(VisibleAnywhere)
 	int32 EnemiesRemaining;
-	UPROPERTY(VisibleAnywhere)
 	int32 EnemiesDestroyed;
-	UPROPERTY(VisibleAnywhere)
 	FTimerHandle SpawnTimer;
 	FTimerDelegate SpawnTimerTimeout;
 };
