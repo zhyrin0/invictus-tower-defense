@@ -1,24 +1,34 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Enemy.h"
+
+#include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Math/UnrealMathUtility.h"
+
+#include "EnemyData.h"
 
 AEnemy::AEnemy()
-	: Health(2.0f), Speed(50.0f), Direction(FVector::ZeroVector)
+	: Direction(FVector::ZeroVector)
 {
-	PrimaryActorTick.bCanEverTick = true;
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(
+	static auto DataAsset = ConstructorHelpers::FObjectFinder<UEnemyData>(
+			TEXT("EnemyData'/Game/Enemy/EnemyData.EnemyData'"));
+	static auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(
 			TEXT("StaticMesh'/Game/Enemy/Meshes/enemy_ufoPurple.enemy_ufoPurple'"));
-	Mesh->SetStaticMesh(MeshAsset.Object);
-	RootComponent = Mesh;
 
+	PrimaryActorTick.bCanEverTick = true;
+	UStaticMeshComponent* Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetStaticMesh(MeshAsset.Object);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	Mesh->SetCollisionProfileName(FName(TEXT("OverlapAllDynamic")));
+	RootComponent = Mesh;
+	Health = DataAsset.Object->Health;
+	SpeedTilePerSecond = DataAsset.Object->SpeedTilePerSecond * 100.0f;
 }
 
-void AEnemy::Initialize()
+void AEnemy::BeginPlay()
 {
+	Super::BeginPlay();
 	CurrentWaypoint = GetActorLocation();
 	DoRequestNextWaypoint();
 }
@@ -26,14 +36,17 @@ void AEnemy::Initialize()
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	AddActorLocalOffset(Direction * Speed * DeltaTime);
-	if (GetActorLocation().Equals(CurrentWaypoint, 0.5)) {
+	FVector Location = GetActorLocation();
+	FVector NewLocation = Location + Direction * SpeedTilePerSecond * DeltaTime;
+	NewLocation = FMath::ClosestPointOnSegment(NewLocation, Location, CurrentWaypoint);
+	SetActorLocation(NewLocation);
+	if (NewLocation.Equals(CurrentWaypoint)) {
 		DoRequestNextWaypoint();
 	}
 }
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
-						 AController* EventInstigator, AActor* DamageCauser)
+		AController* EventInstigator, AActor* DamageCauser)
 {
 	Health -= DamageAmount;
 	if (Health < 1.0f) {
@@ -46,6 +59,11 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 FVector AEnemy::GetTargetLocation() const
 {
 	return GetActorLocation();
+}
+
+void AEnemy::SetDelegate(FRequestNextWaypoint& InRequestNextWaypoint)
+{
+	RequestNextWaypoint = InRequestNextWaypoint;
 }
 
 void AEnemy::DoRequestNextWaypoint()

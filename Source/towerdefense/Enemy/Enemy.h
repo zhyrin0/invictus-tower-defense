@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
 #include "UObject/ScriptInterface.h"
+
 #include "TargetableMixin.h"
+
 #include "Enemy.generated.h"
 
 UCLASS()
@@ -19,26 +20,19 @@ public:
 
 	AEnemy();
 
-	void Initialize();
 	virtual void Tick(float DeltaTime) override;
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 			AController* EventInstigator, AActor* DamageCauser) override;
-
 	virtual FVector GetTargetLocation() const override;
-
-	FRequestNextWaypoint RequestNextWaypoint;
+	void SetDelegate(FRequestNextWaypoint& InRequestNextWaypoint);
 
 protected:
+	virtual void BeginPlay() override;
 	void DoRequestNextWaypoint();
 
-	UPROPERTY(VisibleAnywhere)
 	float Health;
-	UPROPERTY(VisibleAnywhere)
-	float Speed;
-	UPROPERTY(VisibleAnywhere)
+	float SpeedTilePerSecond;
 	FVector CurrentWaypoint;
-	UPROPERTY(VisibleAnywhere)
 	FVector Direction;
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* Mesh;
+	FRequestNextWaypoint RequestNextWaypoint;
 };

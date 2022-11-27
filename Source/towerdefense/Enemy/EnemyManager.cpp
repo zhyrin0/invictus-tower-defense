@@ -54,19 +54,20 @@ ITargetableMixin::FDestroyed& AEnemyManager::GetEnemyDestroyedDelegate()
 
 void AEnemyManager::Spawn()
 {
+	--EnemiesToSpawn;
 	FVector SpawnLocation(Waypoints[0]);
 	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator());
-	Enemy->RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
+	AEnemy::FRequestNextWaypoint RequestNextWaypoint;
+	RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
+	Enemy->SetDelegate(RequestNextWaypoint);
 	Enemy->TargetDestroyed.AddUObject(this, &AEnemyManager::OnEnemyDestroyed);
-	--EnemiesToSpawn;
+
+	EnemySpawned.ExecuteIfBound(Cast<UObject>(Enemy));
 	if (EnemiesToSpawn < 1) {
 		FTimerManager& TimerManager = GetWorldTimerManager();
 		TimerManager.PauseTimer(SpawnTimer);
 		TimerManager.ClearTimer(SpawnTimer);
 	}
-	Enemy->Initialize();
-	TScriptInterface<ITargetableMixin> Target(Cast<UObject>(Enemy));
-	EnemySpawned.ExecuteIfBound(Target);
 }
 
 bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint)
