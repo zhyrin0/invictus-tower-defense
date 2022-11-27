@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerManager.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "Math/NumericLimits.h"
+
 #include "Tower.h"
 
 ATowerManager::ATowerManager()
-	: TargetingFequency(10.0f), TargetingDelta(0.0f), ZOffset(20)
+	: TargetingFrequency(10.0f), TargetingTimeout(1.0f / TargetingFrequency), TargetingDelta(0.0f), ZOffset(20)
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -14,7 +16,6 @@ ATowerManager::ATowerManager()
 void ATowerManager::Tick(float DeltaTime)
 {
 	TargetingDelta += DeltaTime;
-	float TargetingTimeout = 1.0f / TargetingFequency;
 	if (TargetingDelta >= TargetingTimeout) {
 		SelectTargets();
 		TargetingDelta -= TargetingTimeout;
@@ -31,8 +32,6 @@ void ATowerManager::BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
 void ATowerManager::Spawn(FVector Location)
 {
 	Location.Z += ZOffset;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow,
-			FString::Printf(TEXT("Tower placed at %.0fx%.0f."), Location.X / 100.0f, Location.Y / 100.0f));
 	Towers.Add(GetWorld()->SpawnActor<ATower>(Location, FRotator()));
 }
 

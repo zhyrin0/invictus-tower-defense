@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "UObject/ScriptInterface.h"
+
 #include "../Enemy/TargetableMixin.h"
+
 #include "TowerManager.generated.h"
 
 class ATower;
@@ -37,13 +39,10 @@ protected:
 
 
 	UPROPERTY(EditAnywhere)
-	float TargetingFequency;
-	UPROPERTY(VisibleAnywhere)
+	float TargetingFrequency;
+	float TargetingTimeout;
 	float TargetingDelta;
-	UPROPERTY(EditAnywhere)
 	int32 ZOffset;
-	UPROPERTY(VisibleAnywhere)
 	TArray<ATower*> Towers;
-	UPROPERTY(VisibleAnywhere)
 	TArray<TScriptInterface<ITargetableMixin>> Targets;
 };
