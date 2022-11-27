@@ -8,18 +8,18 @@
 
 #include "../Tower/SpawnTowerRequestMixin.h"
 
-#include "LevelBuilderActor.generated.h"
+#include "LevelBuilder.generated.h"
 
 struct FTilePlacement;
 class UTileData;
 
 UCLASS()
-class TOWERDEFENSE_API ALevelBuilderActor : public AActor
+class TOWERDEFENSE_API ALevelBuilder : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	ALevelBuilderActor();
+	ALevelBuilder();
 
 	// note: Returns a list of spawn request delegates of the empty tiles.
 	FSpawnTowerRequestList BuildLevel(int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const;

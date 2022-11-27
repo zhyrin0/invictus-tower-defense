@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "LevelBuilderActor.h"
+#include "LevelBuilder.h"
 
 #include "Engine/StaticMesh.h"
 
@@ -8,15 +8,16 @@
 #include "Tile/TileData.h"
 #include "LevelData.h"
 
-ALevelBuilderActor::ALevelBuilderActor()
+ALevelBuilder::ALevelBuilder()
 {
-	PrimaryActorTick.bCanEverTick = false;
 	static auto TileAsset = ConstructorHelpers::FObjectFinder<UTileData>(
 			TEXT("TileData'/Game/Level/Tile/TileData.TileData'"));
+	
+	PrimaryActorTick.bCanEverTick = false;
 	BuildTileMap(TileAsset.Object);
 }
 
-FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
+FSpawnTowerRequestList ALevelBuilder::BuildLevel(
 		int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const
 {
 	FSpawnTowerRequestList Result;
@@ -24,6 +25,10 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
 	FString EmptyTileName = TEXT("Empty");
 	UWorld* World = GetWorld();
 	for (FTilePlacement& Placement : Tiles) {
+		if (!TileMap.Contains(Placement.TileName)) {
+			continue;
+		}
+
 		FVector TileLocation(Placement.Position, 0.0f);
 		TileLocation *= TILE_SIZE;
 		uint8 RotationCount = static_cast<uint8>(Placement.Rotation);
@@ -45,7 +50,7 @@ FSpawnTowerRequestList ALevelBuilderActor::BuildLevel(
 	return Result;
 }
 
-void ALevelBuilderActor::BuildTileMap(UTileData* TileDB)
+void ALevelBuilder::BuildTileMap(UTileData* TileDB)
 {
 	if (TileDB == nullptr) {
 		return;

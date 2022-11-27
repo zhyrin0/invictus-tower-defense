@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
 #include "Enemy/EnemyManager.h"
-#include "Level/LevelBuilderActor.h"
+#include "Level/LevelBuilder.h"
 #include "Tower/TowerManager.h"
 #include "GameEvents.h"
 #include "TowerDefenseGameState.generated.h"
@@ -45,7 +45,7 @@ protected:
 	int32 CurrentLevel;
 
 	UPROPERTY(VisibleAnywhere)
-	ALevelBuilderActor* LevelBuilder;
+	ALevelBuilder* LevelBuilder;
 	UPROPERTY(VisibleAnywhere)
 	AEnemyManager* EnemyManager;
 	UPROPERTY(VisibleAnywhere)

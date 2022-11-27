@@ -10,7 +10,7 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 	CurrentLevel = 0;
 	UWorld* World = GetWorld();
-	LevelBuilder = World->SpawnActor<ALevelBuilderActor>();
+	LevelBuilder = World->SpawnActor<ALevelBuilder>();
 	EnemyManager = World->SpawnActor<AEnemyManager>();
 	TowerManager = World->SpawnActor<ATowerManager>();
 }
