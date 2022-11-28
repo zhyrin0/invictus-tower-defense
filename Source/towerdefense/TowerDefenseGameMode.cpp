@@ -1,12 +1,16 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TowerDefenseGameMode.h"
+
 #include "Kismet/GameplayStatics.h"
+
 #include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
+#include "Music/BackgroundMusic.h"
 #include "UserInterface/TowerDefenseHUD.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
+
 #include "GameEvents.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
@@ -19,6 +23,7 @@ ATowerDefenseGameMode::ATowerDefenseGameMode()
 
 void ATowerDefenseGameMode::BeginPlay()
 {
+	GetWorld()->SpawnActor<ABackgroundMusic>();
 	ATowerDefenseGameState* LocalGameState = GetGameState<ATowerDefenseGameState>();
 	ATowerDefenseHUD* HUD = Cast<ATowerDefenseHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 
