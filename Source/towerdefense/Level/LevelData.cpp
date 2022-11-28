@@ -9,6 +9,7 @@ FTilePlacement::FTilePlacement()
 }
 
 ULevelData::ULevelData()
+	: EnemySpawnCooldown(1.0f)
 {
 	Waypoints.Add(FVector2D(0.0f, 0.0f));
 }
