@@ -39,11 +39,9 @@ protected:
 	UFUNCTION()
 	void OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target);
 
-
-	UPROPERTY(EditAnywhere)
-	float TargetingFrequency;
 	float TargetingTimeout;
 	float TargetingDelta;
+	float TargetingRange;
 	int32 ZOffset;
 	TArray<ATower*> Towers;
 	TArray<TScriptInterface<ITargetableMixin>> Targets;

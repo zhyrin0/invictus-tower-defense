@@ -30,5 +30,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float AttacksPerSecond;
 	UPROPERTY(EditAnywhere)
+	float AttackRangeInTiles;
+	UPROPERTY(EditAnywhere)
+	float TargetingFrequency;
+	UPROPERTY(EditAnywhere)
 	FProjectileData ProjectileData;
 };

@@ -3,14 +3,19 @@
 #include "TowerManager.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "Math/NumericLimits.h"
 
 #include "Tower.h"
+#include "TowerData.h"
 
 ATowerManager::ATowerManager()
-	: TargetingFrequency(10.0f), TargetingTimeout(1.0f / TargetingFrequency), TargetingDelta(0.0f), ZOffset(20)
+	: TargetingDelta(0.0f), ZOffset(20)
 {
+	static auto DataAsset = ConstructorHelpers::FObjectFinder<UTowerData>(
+			TEXT("TowerData'/Game/Tower/TowerData.TowerData'"));
+
 	PrimaryActorTick.bCanEverTick = true;
+	TargetingRange = DataAsset.Object->AttackRangeInTiles * 100.0f;
+	TargetingTimeout = 1.0f / DataAsset.Object->TargetingFrequency;
 }
 
 void ATowerManager::Tick(float DeltaTime)
@@ -90,7 +95,7 @@ ATowerManager::FTargetLocationMap ATowerManager::GetTargetMap() const
 TScriptInterface<ITargetableMixin> ATowerManager::GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const
 {
 	TScriptInterface<ITargetableMixin> Result;
-	float SmallestDistance = TNumericLimits<float>::Max();
+	float SmallestDistance = TargetingRange * TargetingRange;
 	for (const auto& Pair : TargetMap) {
 		float CurrentDistance = FVector::DistSquared(TowerLocation, Pair.Value);
 		if (CurrentDistance < SmallestDistance) {
