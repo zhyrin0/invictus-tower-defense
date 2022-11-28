@@ -24,7 +24,8 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	void BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 			FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
-			FGameEvents::FLastWaypointReached& InLastWaypointReached);
+			FGameEvents::FLastWaypointReached& InLastWaypointReached,
+			FGameEvents::FUIContinueRequested& InContinueRequested);
 	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyManagerEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InEnemyManagerLastWaypointReached,
 			FGameEvents::FLevelChanged& InLevelChanged,
@@ -40,6 +41,8 @@ protected:
 	void OnEnemyCountChanged(int32 Remaining, int32 Destroyed);
 	UFUNCTION()
 	void OnLastWaypointReached();
+	UFUNCTION()
+	void OnContinueToNextLevel();
 
 	FGameEvents::FLevelChanged LevelChanged;
 	FGameEvents::FLevelWon LevelWon;

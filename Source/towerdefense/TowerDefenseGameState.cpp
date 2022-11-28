@@ -26,7 +26,8 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 
 void ATowerDefenseGameState::BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 		FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
-		FGameEvents::FLastWaypointReached& InLastWaypointReached)
+		FGameEvents::FLastWaypointReached& InLastWaypointReached,
+		FGameEvents::FUIContinueRequested& InContinueRequested)
 {
 	ITargetableMixin::FSpawned& EnemySpawned = EnemyManager->GetEnemySpawnedDelegate();
 	ITargetableMixin::FDestroyed& EnemyDestroyed = EnemyManager->GetEnemyDestroyedDelegate();
@@ -34,6 +35,7 @@ void ATowerDefenseGameState::BindDelegates(FGameEvents::FPlayRequested& InPlayRe
 	InPlayRequested.AddUObject(this, &ATowerDefenseGameState::OnPlayRequested);
 	InEnemyCountChanged.AddUObject(this, &ATowerDefenseGameState::OnEnemyCountChanged);
 	InLastWaypointReached.BindUObject(this, &ATowerDefenseGameState::OnLastWaypointReached);
+	InContinueRequested.AddUObject(this, &ATowerDefenseGameState::OnContinueToNextLevel);
 }
 
 void ATowerDefenseGameState::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyManagerEnemyCountChanged,
@@ -81,8 +83,6 @@ void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroye
 			GameWon.ExecuteIfBound();
 		} else {
 			LevelWon.ExecuteIfBound();
-			++CurrentLevel;
-			BeginLevel(LevelAggregator->Levels[CurrentLevel - 1].LoadSynchronous());
 		}
 	}
 }
@@ -93,4 +93,10 @@ void ATowerDefenseGameState::OnLastWaypointReached()
 	EnemyManager->ClearLevel();
 	TowerManager->ClearLevel();
 	LevelLost.ExecuteIfBound();
+}
+
+void ATowerDefenseGameState::OnContinueToNextLevel()
+{
+	++CurrentLevel;
+	BeginLevel(LevelAggregator->Levels[CurrentLevel - 1].LoadSynchronous());
 }

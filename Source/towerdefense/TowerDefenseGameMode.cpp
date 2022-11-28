@@ -4,14 +4,13 @@
 
 #include "Kismet/GameplayStatics.h"
 
+#include "GameEvents.h"
 #include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
 #include "Music/BackgroundMusic.h"
-#include "UserInterface/TowerDefenseHUD.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
-
-#include "GameEvents.h"
+#include "UserInterface/TowerDefenseHUD.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
 {
@@ -24,6 +23,7 @@ ATowerDefenseGameMode::ATowerDefenseGameMode()
 void ATowerDefenseGameMode::BeginPlay()
 {
 	GetWorld()->SpawnActor<ABackgroundMusic>();
+
 	ATowerDefenseGameState* LocalGameState = GetGameState<ATowerDefenseGameState>();
 	ATowerDefenseHUD* HUD = Cast<ATowerDefenseHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 
@@ -35,13 +35,15 @@ void ATowerDefenseGameMode::BeginPlay()
 	FGameEvents::FLevelWon LevelWon;
 	FGameEvents::FLevelLost LevelLost;
 	FGameEvents::FGameWon GameWon;
+	FGameEvents::FUIContinueRequested ContinueToNextLevel;
+	FGameEvents::FUIContinueRequested ContinueToMainMenu;
 
-	LocalGameState->BindDelegates(PlayRequested, EnemyCountChanged, LastWaypointReached);
-	HUD->BindDelegates(LevelChanged, EnemyCountChanged, PlayRequested, LevelWon, LevelLost, GameWon);
+	LocalGameState->BindDelegates(PlayRequested, EnemyCountChanged, LastWaypointReached, ContinueToNextLevel);
+	HUD->BindDelegates(LevelChanged, EnemyCountChanged, PlayRequested, LevelWon, LevelLost, GameWon, ContinueToNextLevel, ContinueToMainMenu);
 	QuitRequested.BindUObject(this, &ATowerDefenseGameMode::OnQuitRequested);
 
 	LocalGameState->SetDelegates(EnemyCountChanged, LastWaypointReached, LevelChanged, LevelWon, LevelLost, GameWon);
-	HUD->SetDelegates(PlayRequested, QuitRequested);
+	HUD->SetDelegates(PlayRequested, QuitRequested, ContinueToNextLevel, ContinueToMainMenu, ContinueToMainMenu);
 
 	FString LevelAggregatorReference = TEXT("LevelAggregator'/Game/Level/LevelAggregator.LevelAggregator'");
 	ULevelAggregator* Aggregator = LoadObject<ULevelAggregator>(NULL, *LevelAggregatorReference, NULL, LOAD_None, NULL);

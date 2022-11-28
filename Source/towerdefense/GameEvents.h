@@ -14,6 +14,7 @@ struct FGameEvents
 	// note: Parameters: int32 Remaining, int32 Destroyed
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FEnemyCountChanged, int32, int32)
 	DECLARE_DELEGATE(FLastWaypointReached)
+	DECLARE_MULTICAST_DELEGATE(FUIContinueRequested)
 	DECLARE_DELEGATE(FLevelWon)
 	DECLARE_DELEGATE(FLevelLost)
 	DECLARE_DELEGATE(FGameWon)

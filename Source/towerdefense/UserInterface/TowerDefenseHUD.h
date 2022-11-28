@@ -20,9 +20,14 @@ public:
 			FGameEvents::FPlayRequested& InPlayRequested,
 			FGameEvents::FLevelWon& InLevelWon,
 			FGameEvents::FLevelLost& InLevelLost,
-			FGameEvents::FGameWon& InGameWon);
+			FGameEvents::FGameWon& InGameWon,
+			FGameEvents::FUIContinueRequested& InContinueToNextLevel,
+			FGameEvents::FUIContinueRequested& InContinueToMainMenu);
 	void SetDelegates(FGameEvents::FPlayRequested& InMainMenuPlayRequested,
-			FGameEvents::FQuitRequested& InMainMenuQuitRequested);
+			FGameEvents::FQuitRequested& InMainMenuQuitRequested,
+			FGameEvents::FUIContinueRequested& InLevelWonContinueToNextLevel,
+			FGameEvents::FUIContinueRequested& InLevelLostContinueToMainMenu,
+			FGameEvents::FUIContinueRequested& InGameWonContinueToMainMenu);
 	void SetMaxLevelNumber(int32 MaxLevelNumber);
 
 protected:
@@ -35,11 +40,21 @@ protected:
 	void OnLevelLost();
 	UFUNCTION()
 	void OnGameWon();
+	UFUNCTION()
+	void OnContinueToNextLevel();
+	UFUNCTION()
+	void OnContinueToMainMenu();
 
 	void ShowMainMenu();
 	void HideMainMenu();
 	void ShowLevelHUD();
 	void HideLevelHUD();
+	void ShowLevelWon();
+	void HideLevelWon();
+	void ShowLevelLost();
+	void HideLevelLost();
+	void ShowGameWon();
+	void HideGameWon();
 	void ShowWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,
 			EVisibility Visibility, bool UpdateInputMode, const FInputModeDataBase& InputMode);
 	void HideWidget(TSharedPtr<class SWidget> Widget, TSharedPtr<class SWeakWidget> Container,
@@ -49,4 +64,10 @@ protected:
 	TSharedPtr<class SWeakWidget> MainMenuContainer;
 	TSharedPtr<class SLevelHUD> LevelHUD;
 	TSharedPtr<class SWeakWidget> LevelHUDContainer;
+	TSharedPtr<class SIntermediateScreen> LevelWonScreen;
+	TSharedPtr<class SWeakWidget> LevelWonScreenContainer;
+	TSharedPtr<class SIntermediateScreen> LevelLostScreen;
+	TSharedPtr<class SWeakWidget> LevelLostScreenContainer;
+	TSharedPtr<class SIntermediateScreen> GameWonScreen;
+	TSharedPtr<class SWeakWidget> GameWonScreenContainer;
 };
