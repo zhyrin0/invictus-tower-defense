@@ -38,7 +38,7 @@ void AEnemyManager::BeginLevel(TArray<FVector2D> InWaypoints,
 	Waypoints.Empty();
 	Waypoints.Reserve(InWaypoints.Num());
 	for (FVector2D& GridPosition : InWaypoints) {
-		Waypoints.Emplace(GridPosition.X * 100.0f, GridPosition.Y * 100.0f, ZOffset);
+		Waypoints.Emplace(GridPosition * 100.0f, ZOffset);
 	}
 	EnemiesToSpawn = EnemyCount;
 	EnemiesRemaining = EnemiesToSpawn;
