@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseGameState.h"
+#include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
 #include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
@@ -22,6 +23,11 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	LevelBuilder = World->SpawnActor<ALevelBuilder>();
 	EnemyManager = World->SpawnActor<AEnemyManager>();
 	TowerManager = World->SpawnActor<ATowerManager>();
+}
+
+void ATowerDefenseGameState::Initialize(ACameraPawn* InCameraPawn)
+{
+	CameraPawn = InCameraPawn;
 }
 
 void ATowerDefenseGameState::BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
@@ -72,6 +78,10 @@ void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
 	EnemyManager->BeginLevel(Level->Waypoints, Level->EnemyCount,
 							 Level->EnemySpawnDelay, Level->EnemySpawnCooldown);
 	LevelChanged.ExecuteIfBound(CurrentLevel);
+	CameraPawn->SetActorLocation(FVector::ZeroVector);
+	CameraPawn->SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
+	FVector2D Location2D(Level->Width / 2.0f, Level->Height / 2.0f);
+	CameraPawn->SetActorLocation(FVector(Location2D * 100.0f, 0.0f));
 }
 
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)

@@ -10,6 +10,7 @@
 #include "GameEvents.h"
 #include "TowerDefenseGameState.generated.h"
 
+class ACameraPawn;
 class ULevelAggregator;
 class ULevelData;
 
@@ -22,6 +23,7 @@ public:
 	ATowerDefenseGameState();
 
 	virtual void OnConstruction(const FTransform& Transform) override;
+	void Initialize(ACameraPawn* InCameraPawn);
 	void BindDelegates(FGameEvents::FPlayRequested& InPlayRequested,
 			FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InLastWaypointReached,
@@ -54,6 +56,7 @@ protected:
 	UPROPERTY()
 	ULevelAggregator* LevelAggregator;
 
+	ACameraPawn* CameraPawn;
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilder* LevelBuilder;
 	UPROPERTY(VisibleAnywhere)

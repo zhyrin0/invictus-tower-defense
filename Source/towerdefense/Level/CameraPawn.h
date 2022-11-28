@@ -16,15 +16,17 @@ class TOWERDEFENSE_API ACameraPawn : public APawn
 public:
 	ACameraPawn();
 
-	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnZoomIn();
+	UFUNCTION()
+	void OnZoomOut();
 
-	UPROPERTY(VisibleAnywhere)
-	float CameraDistance;
-	UPROPERTY(VisibleAnywhere)
+	static constexpr float DEFAULT_DISTANCE = 500.0f;
+	static constexpr float DISTANCE_STEP = 50.0f;
+	UPROPERTY()
 	UCameraComponent* Camera;
 };

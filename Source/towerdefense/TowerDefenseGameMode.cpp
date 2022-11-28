@@ -25,6 +25,7 @@ void ATowerDefenseGameMode::BeginPlay()
 	GetWorld()->SpawnActor<ABackgroundMusic>();
 
 	ATowerDefenseGameState* LocalGameState = GetGameState<ATowerDefenseGameState>();
+	LocalGameState->Initialize(Cast<ACameraPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)));
 	ATowerDefenseHUD* HUD = Cast<ATowerDefenseHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 
 	FGameEvents::FPlayRequested PlayRequested;
