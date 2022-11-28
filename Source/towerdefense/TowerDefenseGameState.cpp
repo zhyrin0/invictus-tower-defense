@@ -89,5 +89,8 @@ void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroye
 
 void ATowerDefenseGameState::OnLastWaypointReached()
 {
+	LevelBuilder->ClearLevel();
+	EnemyManager->ClearLevel();
+	TowerManager->ClearLevel();
 	LevelLost.ExecuteIfBound();
 }

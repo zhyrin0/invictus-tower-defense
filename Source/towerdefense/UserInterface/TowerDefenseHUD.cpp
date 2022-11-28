@@ -59,12 +59,14 @@ void ATowerDefenseHUD::OnLevelWon()
 
 void ATowerDefenseHUD::OnLevelLost()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("OnLevelLost"));
+	HideLevelHUD();
+	ShowMainMenu();
 }
 
 void ATowerDefenseHUD::OnGameWon()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, TEXT("OnGameWon"));
+	HideLevelHUD();
+	ShowMainMenu();
 }
 
 void ATowerDefenseHUD::ShowMainMenu()
