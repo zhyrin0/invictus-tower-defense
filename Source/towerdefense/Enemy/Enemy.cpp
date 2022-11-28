@@ -70,7 +70,7 @@ void AEnemy::DoRequestNextWaypoint()
 {
 	if (RequestNextWaypoint.IsBound()) {
 		FVector NextWaypoint;
-		bool IsLastWaypointReached = RequestNextWaypoint.Execute(CurrentWaypoint, NextWaypoint);
+		bool IsLastWaypointReached = RequestNextWaypoint.Execute(Cast<UObject>(this), CurrentWaypoint, NextWaypoint);
 		if (IsLastWaypointReached) {
 			Destroy();
 			return;

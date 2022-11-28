@@ -31,7 +31,8 @@ void ATowerDefenseGameState::BindDelegates(FGameEvents::FPlayRequested& InPlayRe
 {
 	ITargetableMixin::FSpawned& EnemySpawned = EnemyManager->GetEnemySpawnedDelegate();
 	ITargetableMixin::FDestroyed& EnemyDestroyed = EnemyManager->GetEnemyDestroyedDelegate();
-	TowerManager->BindDelegates(EnemySpawned, EnemyDestroyed);
+	ITargetableMixin::FDestroyed& EnemyRemoved = EnemyManager->GetEnemyReachedLastWaypoint();
+	TowerManager->BindDelegates(EnemySpawned, EnemyDestroyed, EnemyRemoved);
 	InPlayRequested.AddUObject(this, &ATowerDefenseGameState::OnPlayRequested);
 	InEnemyCountChanged.AddUObject(this, &ATowerDefenseGameState::OnEnemyCountChanged);
 	InLastWaypointReached.BindUObject(this, &ATowerDefenseGameState::OnLastWaypointReached);

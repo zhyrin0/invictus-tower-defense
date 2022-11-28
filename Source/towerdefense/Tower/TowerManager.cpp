@@ -23,10 +23,12 @@ void ATowerManager::Tick(float DeltaTime)
 }
 
 void ATowerManager::BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
-		ITargetableMixin::FDestroyed& InTargetDestroyed)
+		ITargetableMixin::FDestroyed& InTargetDestroyed,
+		ITargetableMixin::FDestroyed& InTargetRemoved)
 {
 	InTargetSpawned.BindUObject(this, &ATowerManager::OnTargetSpawned);
 	InTargetDestroyed.AddUObject(this, &ATowerManager::OnTargetDestroyed);
+	InTargetRemoved.AddUObject(this, &ATowerManager::OnTargetDestroyed);
 }
 
 void ATowerManager::ClearLevel()

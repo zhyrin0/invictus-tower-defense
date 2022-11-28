@@ -16,7 +16,7 @@ class TOWERDEFENSE_API AEnemy : public AActor, public ITargetableMixin
 	GENERATED_BODY()
 
 public:
-	DECLARE_DELEGATE_RetVal_TwoParams(bool, FRequestNextWaypoint, FVector, FVector&)
+	DECLARE_DELEGATE_RetVal_ThreeParams(bool, FRequestNextWaypoint, TScriptInterface<ITargetableMixin>, FVector, FVector&)
 
 	AEnemy();
 

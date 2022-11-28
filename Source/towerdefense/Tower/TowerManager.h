@@ -22,7 +22,8 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	void BindDelegates(ITargetableMixin::FSpawned& InTargetSpawned,
-			ITargetableMixin::FDestroyed& InTargetDestroyed);
+			ITargetableMixin::FDestroyed& InTargetDestroyed,
+			ITargetableMixin::FDestroyed& InTargetRemoved);
 	void ClearLevel();
 	void Spawn(FVector Location);
 

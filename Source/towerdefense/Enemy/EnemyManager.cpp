@@ -65,6 +65,11 @@ ITargetableMixin::FDestroyed& AEnemyManager::GetEnemyDestroyedDelegate()
 	return EnemyDestroyed;
 }
 
+ITargetableMixin::FDestroyed& AEnemyManager::GetEnemyReachedLastWaypoint()
+{
+	return EnemyReachedLastWaypoint;
+}
+
 void AEnemyManager::Spawn()
 {
 	--EnemiesToSpawn;
@@ -83,7 +88,7 @@ void AEnemyManager::Spawn()
 	}
 }
 
-bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint)
+bool AEnemyManager::OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy, FVector CurrentWaypoint, FVector& OutNextWaypoint)
 {
 	for (int32 i = 1; i < Waypoints.Num(); ++i) {
 		if (CurrentWaypoint.Equals(Waypoints[i - 1])) {
@@ -91,6 +96,7 @@ bool AEnemyManager::OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector&
 			return false;
 		}
 	}
+	EnemyReachedLastWaypoint.Broadcast(Enemy);
 	LastWaypointReached.ExecuteIfBound();
 	return true;
 }

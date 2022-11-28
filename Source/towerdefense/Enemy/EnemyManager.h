@@ -32,6 +32,7 @@ public:
 			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();
 	ITargetableMixin::FDestroyed& GetEnemyDestroyedDelegate();
+	ITargetableMixin::FDestroyed& GetEnemyReachedLastWaypoint();
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,12 +40,13 @@ protected:
 	// note: Returns true if last waypoint is reached,
 	// otherwise returns false and writes next waypoint into out parameter.
 	UFUNCTION()
-	bool OnEnemyRequestNextWaypoint(FVector CurrentWaypoint, FVector& OutNextWaypoint);
+	bool OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy, FVector CurrentWaypoint, FVector& OutNextWaypoint);
 	UFUNCTION()
 	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
 
 	ITargetableMixin::FSpawned EnemySpawned;
 	ITargetableMixin::FDestroyed EnemyDestroyed;
+	ITargetableMixin::FDestroyed EnemyReachedLastWaypoint;
 	FGameEvents::FEnemyCountChanged EnemyCountChanged;
 	FGameEvents::FLastWaypointReached LastWaypointReached;
 
