@@ -27,36 +27,51 @@ void ALevelBuilder::ClearLevel()
 	}
 }
 
-FSpawnTowerRequestList ALevelBuilder::BuildLevel(
-		int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const
+FSpawnTowerRequestList ALevelBuilder::BuildLevel(FVector2D Size, TArray<FTilePlacement> Tiles) const
 {
+	static FString EmptyTileName = TEXT("Empty");
+	
 	FSpawnTowerRequestList Result;
 
-	FString EmptyTileName = TEXT("Empty");
-	UWorld* World = GetWorld();
+	TArray<FVector2D> UnbuiltTiles;
+	for (float Y = 0.0f; Y < Size.Y; ++Y) {
+		for (float X = 0.0f; X < Size.X; ++X) {
+			UnbuiltTiles.Emplace(X, Y);
+		}
+	}
+
 	for (FTilePlacement& Placement : Tiles) {
 		if (!TileMap.Contains(Placement.TileName)) {
 			continue;
 		}
-
-		FVector TileLocation(Placement.Position, 0.0f);
-		TileLocation *= TILE_SIZE;
 		uint8 RotationCount = static_cast<uint8>(Placement.Rotation);
-		FRotator TileRotation(0.0f, 90.0f * RotationCount, 0.0f);
-
-		TArray<UStaticMesh*> Meshes;
-		for (TSoftObjectPtr<UStaticMesh> MeshPtr : TileMap[Placement.TileName]) {
-			UStaticMesh* Mesh = MeshPtr.LoadSynchronous();
-			Meshes.Add(Mesh);
-		}
-
-		ATile* Tile = World->SpawnActor<ATile>(TileLocation, TileRotation);
-		Tile->Initialize(Meshes);
+		ATile* Tile = BuildTile(Placement.TileName, Placement.Position, RotationCount);
 		if (Placement.TileName == EmptyTileName) {
 			Result.Add(&(Tile->SpawnTowerRequest));
 		}
+		UnbuiltTiles.Remove(Placement.Position);
 	}
 
+	for (FVector2D UnbuiltPosition : UnbuiltTiles) {
+		ATile* Tile = BuildTile(EmptyTileName, UnbuiltPosition, 0);
+		Result.Add(&(Tile->SpawnTowerRequest));
+	}
+
+	return Result;
+}
+
+ATile* ALevelBuilder::BuildTile(FString Name, FVector2D Position, int32 RotationCount) const
+{
+	ATile* Result = nullptr;
+	FVector Location(Position * 100.0f, 0.0f);
+	FRotator Rotation(0.0f, 90.0f * RotationCount, 0.0f);
+	TArray<UStaticMesh*> Meshes;
+	for (TSoftObjectPtr<UStaticMesh> MeshPtr : TileMap[Name]) {
+		UStaticMesh* Mesh = MeshPtr.LoadSynchronous();
+		Meshes.Add(Mesh);
+	}
+	Result = GetWorld()->SpawnActor<ATile>(Location, Rotation);
+	Result->Initialize(Meshes);
 	return Result;
 }
 

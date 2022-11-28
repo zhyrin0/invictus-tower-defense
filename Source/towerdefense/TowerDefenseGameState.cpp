@@ -71,7 +71,7 @@ void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Couldn't load level."));
 		return;
 	}
-	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Level->Width, Level->Height, Level->Tiles);
+	FSpawnTowerRequestList Requests = LevelBuilder->BuildLevel(Level->Size, Level->Tiles);
 	for (auto Request : Requests) {
 		Request->BindUObject(TowerManager, &ATowerManager::Spawn);
 	}
@@ -80,8 +80,7 @@ void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
 	LevelChanged.ExecuteIfBound(CurrentLevel);
 	CameraPawn->SetActorLocation(FVector::ZeroVector);
 	CameraPawn->SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
-	FVector2D Location2D(Level->Width / 2.0f, Level->Height / 2.0f);
-	CameraPawn->SetActorLocation(FVector(Location2D * 100.0f, 0.0f));
+	CameraPawn->SetActorLocation(FVector(Level->Size / 2.0f * 100.0f, 0.0f));
 }
 
 void ATowerDefenseGameState::OnEnemyCountChanged(int32 Remaining, int32 Destroyed)

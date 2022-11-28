@@ -10,6 +10,7 @@
 
 #include "LevelBuilder.generated.h"
 
+class ATile;
 struct FTilePlacement;
 class UTileData;
 
@@ -23,11 +24,12 @@ public:
 
 	void ClearLevel();
 	// note: Returns a list of spawn request delegates of the empty tiles.
-	FSpawnTowerRequestList BuildLevel(int32 Width, int32 Height, TArray<FTilePlacement> Tiles) const;
+	FSpawnTowerRequestList BuildLevel(FVector2D Size, TArray<FTilePlacement> Tiles) const;
 
 	static constexpr int32 TILE_SIZE = 100;
 
 protected:
+	ATile* BuildTile(FString Name, FVector2D Position, int32 RotationCount) const;
 	void BuildTileMap(UTileData* TileDB);
 
 	TMap<FString, TArray<TSoftObjectPtr<UStaticMesh>>> TileMap;

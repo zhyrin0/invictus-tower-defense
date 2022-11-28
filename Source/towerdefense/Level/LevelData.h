@@ -42,9 +42,7 @@ public:
 	ULevelData();
 
 	UPROPERTY(EditAnywhere)
-	int32 Width;
-	UPROPERTY(EditAnywhere)
-	int32 Height;
+	FVector2D Size;
 	UPROPERTY(EditAnywhere)
 	TArray<FTilePlacement> Tiles;
 	UPROPERTY(EditAnywhere)
