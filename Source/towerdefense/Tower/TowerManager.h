@@ -11,6 +11,7 @@
 #include "TowerManager.generated.h"
 
 class ATower;
+class UAudioComponent;
 
 UCLASS()
 class TOWERDEFENSE_API ATowerManager : public AActor
@@ -30,10 +31,13 @@ public:
 protected:
 	using FTargetLocationMap = TMap<TScriptInterface<ITargetableMixin>, FVector>;
 
+	virtual void BeginPlay() override;
 	void SelectTargets() const;
 	FTargetLocationMap GetTargetMap() const;
 	TScriptInterface<ITargetableMixin> GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const;
 
+	UFUNCTION()
+	void OnTowerAttacked();
 	UFUNCTION()
 	void OnTargetSpawned(TScriptInterface<ITargetableMixin> Target);
 	UFUNCTION()
@@ -45,4 +49,8 @@ protected:
 	int32 ZOffset;
 	TArray<ATower*> Towers;
 	TArray<TScriptInterface<ITargetableMixin>> Targets;
+	UPROPERTY()
+	UAudioComponent* PlaceAudio;
+	UPROPERTY()
+	UAudioComponent* FireAudio;
 };

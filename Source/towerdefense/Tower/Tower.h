@@ -20,10 +20,14 @@ class TOWERDEFENSE_API ATower : public AActor
 	GENERATED_BODY()
 
 public:
+	DECLARE_DELEGATE(FAttacked);
+
 	ATower();
 
 	virtual void Tick(float DeltaTime) override;
 	void SetTarget(TScriptInterface<ITargetableMixin> NewTarget);
+
+	FAttacked Attacked;
 
 protected:
 	virtual void BeginPlay() override;

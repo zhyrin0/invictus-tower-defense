@@ -2,7 +2,10 @@
 
 #include "TowerManager.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Math/UnrealMathUtility.h"
+#include "Sound/SoundWave.h"
 
 #include "Tower.h"
 #include "TowerData.h"
@@ -16,6 +19,16 @@ ATowerManager::ATowerManager()
 	PrimaryActorTick.bCanEverTick = true;
 	TargetingRange = DataAsset.Object->AttackRangeInTiles * 100.0f;
 	TargetingTimeout = 1.0f / DataAsset.Object->TargetingFrequency;
+}
+
+void ATowerManager::BeginPlay()
+{
+	FString PlaceAudioReference = TEXT("SoundWave'/Game/Tower/SFX/qubodup-DoorClose03.qubodup-DoorClose03'");
+	FString FireAudioReference = TEXT("SoundWave'/Game/Tower/SFX/cannon_fire.cannon_fire'");
+	USoundWave* PlaceAudioAsset = LoadObject<USoundWave>(nullptr, *PlaceAudioReference, nullptr, LOAD_None);
+	USoundWave* FireAudioAsset = LoadObject<USoundWave>(nullptr, *FireAudioReference, nullptr, LOAD_None);
+	PlaceAudio = UGameplayStatics::CreateSound2D(GetWorld(), PlaceAudioAsset, 0.5f, 0.475f, 0.0f, nullptr, false, false);
+	FireAudio = UGameplayStatics::CreateSound2D(GetWorld(), FireAudioAsset, 0.5f, 1.0f, 0.0f, nullptr, false, false);
 }
 
 void ATowerManager::Tick(float DeltaTime)
@@ -48,21 +61,28 @@ void ATowerManager::ClearLevel()
 void ATowerManager::Spawn(FVector Location)
 {
 	Location.Z += ZOffset;
-	Towers.Add(GetWorld()->SpawnActor<ATower>(Location, FRotator()));
+	ATower* Tower = GetWorld()->SpawnActor<ATower>(Location, FRotator::ZeroRotator);
+	Tower->Attacked.BindUObject(this, &ATowerManager::OnTowerAttacked);
+	Towers.Add(Tower);
+	PlaceAudio->Play();
+}
+
+void ATowerManager::OnTowerAttacked()
+{
+	FireAudio->SetPitchMultiplier(FMath::FRandRange(0.35f, 0.65f));
+	FireAudio->Play();
 }
 
 void ATowerManager::OnTargetSpawned(TScriptInterface<ITargetableMixin> Target)
 {
 	Targets.Emplace(Target);
 	SelectTargets();
-	TargetingDelta = 0.0f;
 }
 
 void ATowerManager::OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target)
 {
 	Targets.Remove(Target);
 	SelectTargets();
-	TargetingDelta = 0.0f;
 }
 
 void ATowerManager::SelectTargets() const

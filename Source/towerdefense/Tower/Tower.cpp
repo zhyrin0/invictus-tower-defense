@@ -90,5 +90,6 @@ void ATower::OnAttackTimeout()
 		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(
 				ProjectileSpawn->GetComponentLocation(), FRotator::ZeroRotator);
 		Projectile->Initialize(Target);
+		Attacked.ExecuteIfBound();
 	}
 }
