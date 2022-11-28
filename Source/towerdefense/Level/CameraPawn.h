@@ -18,6 +18,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void SetStartingCameraOffset(float Offset);
 
 protected:
 	UFUNCTION()
@@ -25,7 +26,6 @@ protected:
 	UFUNCTION()
 	void OnZoomOut();
 
-	static constexpr float DEFAULT_DISTANCE = 500.0f;
 	static constexpr float DISTANCE_STEP = 50.0f;
 	UPROPERTY()
 	UCameraComponent* Camera;

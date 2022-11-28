@@ -106,6 +106,13 @@ void SLevelHUD::Construct(const FArguments& InArgs)
 					.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
 				]
 			]
+// note: Zoom hint
+			+ SVerticalBox::Slot()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("USE_MOUSEWHEEL", "Use <mousewheel> to zoom.")).Font(TextStyle).ColorAndOpacity(Color)
+				.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+			]
 		]
 	];
 }

@@ -5,14 +5,12 @@
 
 ACameraPawn::ACameraPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
 	Camera->AddLocalRotation(FRotator(-70.0f, 0.0f, 0.0f));
-	Camera->AddLocalOffset(FVector(-1.0f * DEFAULT_DISTANCE, 0.0f, 0.0f));
 }
 
 // Called to bind functionality to input
@@ -23,6 +21,12 @@ void ACameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		PlayerInputComponent->BindAction(FName(TEXT("ZoomIn")), EInputEvent::IE_Pressed, this, &ACameraPawn::OnZoomIn);
 		PlayerInputComponent->BindAction(FName(TEXT("ZoomOut")), EInputEvent::IE_Pressed, this, &ACameraPawn::OnZoomOut);
 	}
+}
+
+void ACameraPawn::SetStartingCameraOffset(float Offset)
+{
+	Camera->SetRelativeLocation(FVector::ZeroVector);
+	Camera->AddLocalOffset(FVector(-1.0f * Offset, 0.0f, 0.0f));
 }
 
 void ACameraPawn::OnZoomIn()
