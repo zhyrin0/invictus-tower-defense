@@ -114,6 +114,20 @@ void SLevelHUD::Construct(const FArguments& InArgs)
 				.Text(LOCTEXT("USE_MOUSEWHEEL", "Use <mousewheel> to zoom.")).Font(TextStyle).ColorAndOpacity(Color)
 				.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
 			]
+// note: Camera movement hint
+			+ SVerticalBox::Slot()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("USE_WASD", "Use <W,A,S,D> to move camera.")).Font(TextStyle).ColorAndOpacity(Color)
+				.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+			]
+// note: Camera rotation hint
+			+ SVerticalBox::Slot()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("USE_QE", "Use <Q,E> to rotate camera")).Font(TextStyle).ColorAndOpacity(Color)
+				.ShadowColorAndOpacity(Shadow).ShadowOffset(ShadowOffset)
+			]
 		]
 	];
 }

@@ -4,12 +4,12 @@
 
 #include "Enemy/EnemyManager.h"
 #include "Enemy/TargetableMixin.h"
-#include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
 #include "Level/LevelBuilder.h"
 #include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
 #include "Tower/TowerManager.h"
+#include "Camera.h"
 #include "Grid2D.h"
 
 
@@ -31,7 +31,7 @@ void ATowerDefenseGameState::OnConstruction(const FTransform& Transform)
 	TowerManager = World->SpawnActor<ATowerManager>();
 }
 
-void ATowerDefenseGameState::Initialize(ACameraPawn* InCameraPawn)
+void ATowerDefenseGameState::Initialize(ACamera* InCameraPawn)
 {
 	CameraPawn = InCameraPawn;
 }

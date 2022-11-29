@@ -4,17 +4,17 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
 #include "Music/BackgroundMusic.h"
 #include "UserInterface/TowerDefenseHUD.h"
+#include "Camera.h"
 #include "GameEvents.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
 {
-	DefaultPawnClass = ACameraPawn::StaticClass();
+	DefaultPawnClass = ACamera::StaticClass();
 	GameStateClass = ATowerDefenseGameState::StaticClass();
 	HUDClass = ATowerDefenseHUD::StaticClass();
 	PlayerControllerClass = ATowerDefensePlayerController::StaticClass();
@@ -25,7 +25,7 @@ void ATowerDefenseGameMode::BeginPlay()
 	GetWorld()->SpawnActor<ABackgroundMusic>();
 
 	ATowerDefenseGameState* LocalGameState = GetGameState<ATowerDefenseGameState>();
-	LocalGameState->Initialize(Cast<ACameraPawn>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)));
+	LocalGameState->Initialize(Cast<ACamera>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0)));
 	ATowerDefenseHUD* HUD = Cast<ATowerDefenseHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 
 	FGameEvents::FPlayRequested PlayRequested;
