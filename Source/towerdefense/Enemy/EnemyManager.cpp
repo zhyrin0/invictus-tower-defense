@@ -36,7 +36,7 @@ void AEnemyManager::ClearLevel()
 	}
 }
 
-void AEnemyManager::BeginLevel(TArray<FVector2D> InWaypoints,
+void AEnemyManager::BeginLevel(const TArray<FVector2D>& InWaypoints,
 		int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown)
 {
 	FTimerManager& TimerManager = GetWorldTimerManager();
@@ -46,7 +46,7 @@ void AEnemyManager::BeginLevel(TArray<FVector2D> InWaypoints,
 	}
 	Waypoints.Empty();
 	Waypoints.Reserve(InWaypoints.Num());
-	for (FVector2D& GridPosition : InWaypoints) {
+	for (FVector2D GridPosition : InWaypoints) {
 		Waypoints.Emplace(GridPosition * 100.0f, ZOffset);
 	}
 	EnemiesToSpawn = EnemyCount;

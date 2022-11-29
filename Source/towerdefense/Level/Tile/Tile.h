@@ -19,7 +19,7 @@ class TOWERDEFENSE_API ATile : public AActor, public ISpawnTowerRequestMixin
 public:
 	ATile();
 
-	void Initialize(TArray<UStaticMesh*> Meshes);
+	void Initialize(const TArray<UStaticMesh*>& Meshes);
 	virtual void NotifyActorOnClicked(FKey ButtonPressed) override;
 
 protected:

@@ -27,7 +27,7 @@ public:
 	AEnemyManager();
 
 	void ClearLevel();
-	void BeginLevel(TArray<FVector2D> InWaypoints, int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown);
+	void BeginLevel(const TArray<FVector2D>& InWaypoints, int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown);
 	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
 			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();

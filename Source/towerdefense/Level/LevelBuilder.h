@@ -25,7 +25,7 @@ public:
 
 	void ClearLevel();
 	// note: Returns a list of spawn request delegates of the empty tiles.
-	FSpawnTowerRequestList BuildLevel(FVector2D Size, TArray<FTilePlacement> Tiles) const;
+	FSpawnTowerRequestList BuildLevel(FVector2D Size, const TArray<FTilePlacement>& Tiles) const;
 
 	static constexpr int32 TILE_SIZE = 100;
 

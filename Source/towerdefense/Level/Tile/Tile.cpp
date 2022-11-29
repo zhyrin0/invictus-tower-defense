@@ -10,7 +10,7 @@ ATile::ATile()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 }
 
-void ATile::Initialize(TArray<UStaticMesh*> Meshes)
+void ATile::Initialize(const TArray<UStaticMesh*>& Meshes)
 {
 	for (UStaticMesh* Mesh : Meshes) {
 		UStaticMeshComponent* Component = NewObject<UStaticMeshComponent>(this);

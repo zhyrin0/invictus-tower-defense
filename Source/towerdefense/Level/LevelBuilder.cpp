@@ -27,7 +27,7 @@ void ALevelBuilder::ClearLevel()
 	}
 }
 
-FSpawnTowerRequestList ALevelBuilder::BuildLevel(FVector2D Size, TArray<FTilePlacement> Tiles) const
+FSpawnTowerRequestList ALevelBuilder::BuildLevel(FVector2D Size, const TArray<FTilePlacement>& Tiles) const
 {
 	static FString EmptyTileName = TEXT("Empty");
 	
@@ -40,7 +40,7 @@ FSpawnTowerRequestList ALevelBuilder::BuildLevel(FVector2D Size, TArray<FTilePla
 		}
 	}
 
-	for (FTilePlacement& Placement : Tiles) {
+	for (const FTilePlacement& Placement : Tiles) {
 		if (!TileMap.Contains(Placement.TileName)) {
 			continue;
 		}
