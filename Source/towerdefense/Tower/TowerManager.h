@@ -35,7 +35,6 @@ protected:
 	void SelectTargets() const;
 	FTargetLocationMap GetTargetMap() const;
 	TScriptInterface<ITargetableMixin> GetNearestTarget(FVector TowerLocation, const FTargetLocationMap& TargetMap) const;
-
 	UFUNCTION()
 	void OnTowerAttacked();
 	UFUNCTION()

@@ -26,10 +26,10 @@ public:
 
 	AEnemyManager();
 
+	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
+					  FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	void ClearLevel();
 	void BeginLevel(const TArray<FVector2D>& InWaypoints, int32 EnemyCount, float EnemySpawnDelay, float EnemySpawnCooldown);
-	void SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
-			FGameEvents::FLastWaypointReached& InLastWaypointReached);
 	ITargetableMixin::FSpawned& GetEnemySpawnedDelegate();
 	ITargetableMixin::FDestroyed& GetEnemyDestroyedDelegate();
 	ITargetableMixin::FDestroyed& GetEnemyReachedLastWaypoint();
@@ -47,18 +47,17 @@ protected:
 	UFUNCTION()
 	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
 
-	ITargetableMixin::FSpawned EnemySpawned;
-	ITargetableMixin::FDestroyed EnemyDestroyed;
-	ITargetableMixin::FDestroyed EnemyReachedLastWaypoint;
-	FGameEvents::FEnemyCountChanged EnemyCountChanged;
-	FGameEvents::FLastWaypointReached LastWaypointReached;
-
 	TArray<FVector> Waypoints;
 	int32 EnemiesToSpawn;
 	int32 EnemiesRemaining;
 	int32 EnemiesDestroyed;
 	FTimerHandle SpawnTimer;
 	FTimerDelegate SpawnTimerTimeout;
+	ITargetableMixin::FSpawned EnemySpawned;
+	ITargetableMixin::FDestroyed EnemyDestroyed;
+	ITargetableMixin::FDestroyed EnemyReachedLastWaypoint;
+	FGameEvents::FEnemyCountChanged EnemyCountChanged;
+	FGameEvents::FLastWaypointReached LastWaypointReached;
 	UPROPERTY()
 	UAudioComponent* DamageAudio;
 	UPROPERTY()

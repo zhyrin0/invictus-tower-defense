@@ -48,16 +48,14 @@ protected:
 	UFUNCTION()
 	void OnContinueToNextLevel();
 
-	FGameEvents::FLevelChanged LevelChanged;
-	FGameEvents::FLevelWon LevelWon;
-	FGameEvents::FLevelLost LevelLost;
-	FGameEvents::FGameWon GameWon;
-
 	UPROPERTY()
 	int32 CurrentLevel;
 	UPROPERTY()
 	ULevelAggregator* LevelAggregator;
-
+	FGameEvents::FLevelChanged LevelChanged;
+	FGameEvents::FLevelWon LevelWon;
+	FGameEvents::FLevelLost LevelLost;
+	FGameEvents::FGameWon GameWon;
 	ACamera* CameraPawn;
 	UPROPERTY(VisibleAnywhere)
 	ALevelBuilder* LevelBuilder;

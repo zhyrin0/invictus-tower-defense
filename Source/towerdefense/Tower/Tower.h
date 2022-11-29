@@ -35,13 +35,11 @@ protected:
 	void OnAttackTimeout();
 
 	static constexpr float ROTATION_YAW_OFFSET = -90.0f;
-
 	float RotationDegreesPerSecond;
 	TScriptInterface<ITargetableMixin> Target;
 	float AttackRate;
 	FTimerHandle AttackTimer;
 	FTimerDelegate AttackTimeout;
-
 	UPROPERTY()
 	UStaticMeshComponent* CannonBase;
 	UPROPERTY()

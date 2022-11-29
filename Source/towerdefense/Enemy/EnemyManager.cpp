@@ -28,6 +28,13 @@ void AEnemyManager::BeginPlay()
 	DestroyAudio = UGameplayStatics::CreateSound2D(GetWorld(), DestroyAudioAsset, 1.0f, 1.0f, 0.0f, nullptr, false, false);
 }
 
+void AEnemyManager::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
+								 FGameEvents::FLastWaypointReached& InLastWaypointReached)
+{
+	EnemyCountChanged = InEnemyCountChanged;
+	LastWaypointReached = InLastWaypointReached;
+}
+
 void AEnemyManager::ClearLevel()
 {
 	TArray<AActor*> Enemies;
@@ -56,13 +63,6 @@ void AEnemyManager::BeginLevel(const TArray<FVector2D>& InWaypoints,
 	SpawnTimer = FTimerHandle();
 	TimerManager.SetTimer(SpawnTimer, SpawnTimerTimeout, EnemySpawnCooldown, true, EnemySpawnDelay);
 	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
-}
-
-void AEnemyManager::SetDelegates(FGameEvents::FEnemyCountChanged& InEnemyCountChanged,
-		FGameEvents::FLastWaypointReached& InLastWaypointReached)
-{
-	EnemyCountChanged = InEnemyCountChanged;
-	LastWaypointReached = InLastWaypointReached;
 }
 
 ITargetableMixin::FSpawned& AEnemyManager::GetEnemySpawnedDelegate()
