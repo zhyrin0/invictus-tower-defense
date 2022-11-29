@@ -12,6 +12,7 @@
 
 class ATile;
 struct FTilePlacement;
+class UStaticMesh;
 class UTileData;
 
 UCLASS()

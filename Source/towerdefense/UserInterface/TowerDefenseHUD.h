@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+
 #include "../GameEvents.h"
+
 #include "TowerDefenseHUD.generated.h"
 
 UCLASS()

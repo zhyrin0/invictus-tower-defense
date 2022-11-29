@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SMainMenu.h"
+
 #include "Math/Color.h"
-#include "SlateOptMacros.h"
 #include "Widgets/Input/SEditableText.h"
 #include "Widgets/Input/SSpinBox.h"
 #include "Widgets/Layout/SBackgroundBlur.h"
+#include "SlateOptMacros.h"
 
 #define LOCTEXT_NAMESPACE "UI"
 

@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Camera/CameraComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+
 #include "CameraPawn.generated.h"
+
+class UCameraComponent;
 
 UCLASS()
 class TOWERDEFENSE_API ACameraPawn : public APawn

@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+
 #include "TowerDefensePlayerController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TOWERDEFENSE_API ATowerDefensePlayerController : public APlayerController
 {
@@ -16,5 +14,4 @@ class TOWERDEFENSE_API ATowerDefensePlayerController : public APlayerController
 
 public:
 	ATowerDefensePlayerController();
-
 };

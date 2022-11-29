@@ -5,11 +5,9 @@
 #include "CoreMinimal.h"
 #include "Engine/EngineTypes.h"
 #include "GameFramework/Actor.h"
-#include "Math/UnrealMathUtility.h"
 #include "TimerManager.h"
 #include "UObject/ScriptInterface.h"
 
-#include "../Level/LevelData.h"
 #include "../GameEvents.h"
 #include "TargetableMixin.h"
 

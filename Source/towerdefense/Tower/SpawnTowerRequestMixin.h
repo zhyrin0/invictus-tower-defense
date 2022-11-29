@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+
 #include "SpawnTowerRequestMixin.generated.h"
 
 UINTERFACE(MinimalAPI)

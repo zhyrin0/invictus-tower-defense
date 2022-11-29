@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
+
 #include "../GameEvents.h"
 
 template<typename T>

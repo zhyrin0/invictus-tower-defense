@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SLevelHUD.h"
-#include "SlateOptMacros.h"
+
 #include "Widgets/Layout/SBackgroundBlur.h"
+#include "SlateOptMacros.h"
 
 #define LOCTEXT_NAMESPACE "UI"
 

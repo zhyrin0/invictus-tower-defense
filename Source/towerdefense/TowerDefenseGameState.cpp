@@ -1,11 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseGameState.h"
+
+#include "Enemy/EnemyManager.h"
+#include "Enemy/TargetableMixin.h"
 #include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
+#include "Level/LevelBuilder.h"
 #include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
-#include "Enemy/TargetableMixin.h"
+#include "Tower/TowerManager.h"
+
 
 ATowerDefenseGameState::ATowerDefenseGameState()
 {

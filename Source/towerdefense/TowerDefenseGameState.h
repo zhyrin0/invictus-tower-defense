@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
-#include "Enemy/EnemyManager.h"
-#include "Level/LevelBuilder.h"
-#include "Tower/TowerManager.h"
+
 #include "GameEvents.h"
+
 #include "TowerDefenseGameState.generated.h"
 
 class ACameraPawn;
+class AEnemyManager;
+class ALevelBuilder;
+class ATowerManager;
 class ULevelAggregator;
 class ULevelData;
 

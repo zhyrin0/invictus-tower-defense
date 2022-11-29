@@ -4,13 +4,13 @@
 
 #include "Kismet/GameplayStatics.h"
 
-#include "GameEvents.h"
 #include "Level/CameraPawn.h"
 #include "Level/LevelAggregator.h"
 #include "Music/BackgroundMusic.h"
+#include "UserInterface/TowerDefenseHUD.h"
+#include "GameEvents.h"
 #include "TowerDefenseGameState.h"
 #include "TowerDefensePlayerController.h"
-#include "UserInterface/TowerDefenseHUD.h"
 
 ATowerDefenseGameMode::ATowerDefenseGameMode()
 {

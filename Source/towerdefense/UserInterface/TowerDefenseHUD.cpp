@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TowerDefenseHUD.h"
+
 #include "Engine/Engine.h"
 #include "Widgets/SWeakWidget.h"
+
 #include "SIntermediateScreen.h"
 #include "SLevelHUD.h"
 #include "SMainMenu.h"

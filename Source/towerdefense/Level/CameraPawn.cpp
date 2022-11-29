@@ -3,6 +3,8 @@
 
 #include "CameraPawn.h"
 
+#include "Camera/CameraComponent.h"
+
 ACameraPawn::ACameraPawn()
 {
 	PrimaryActorTick.bCanEverTick = false;
