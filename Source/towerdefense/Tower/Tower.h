@@ -26,8 +26,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	void SetTarget(TScriptInterface<ITargetableMixin> NewTarget);
-
-	FAttacked Attacked;
+	void SetDelegate(FAttacked& InAttacked);
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,6 +39,7 @@ protected:
 	float AttackRate;
 	FTimerHandle AttackTimer;
 	FTimerDelegate AttackTimeout;
+	FAttacked Attacked;
 	UPROPERTY()
 	UStaticMeshComponent* CannonBase;
 	UPROPERTY()

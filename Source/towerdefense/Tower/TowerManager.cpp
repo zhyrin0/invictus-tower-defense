@@ -64,7 +64,9 @@ void ATowerManager::ClearLevel()
 void ATowerManager::Spawn(FVector Location)
 {
 	ATower* Tower = GetWorld()->SpawnActor<ATower>(Location + FGrid2D::TowerOffset(), FRotator::ZeroRotator);
-	Tower->Attacked.BindUObject(this, &ATowerManager::OnTowerAttacked);
+	ATower::FAttacked Attacked;
+	Attacked.BindUObject(this, &ATowerManager::OnTowerAttacked);
+	Tower->SetDelegate(Attacked);
 	Towers.Add(Tower);
 	PlaceAudio->Play();
 }

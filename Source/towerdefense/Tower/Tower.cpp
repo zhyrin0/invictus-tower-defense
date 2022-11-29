@@ -85,6 +85,11 @@ void ATower::SetTarget(TScriptInterface<ITargetableMixin> NewTarget)
 	Target = NewTarget;
 }
 
+void ATower::SetDelegate(FAttacked& InAttacked)
+{
+	Attacked = InAttacked;
+}
+
 void ATower::OnAttackTimeout()
 {
 	if (Target) {
