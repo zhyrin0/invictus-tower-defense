@@ -15,7 +15,7 @@ AEnemy::AEnemy()
 	static auto DataAsset = ConstructorHelpers::FObjectFinder<UEnemyData>(
 			TEXT("EnemyData'/Game/Enemy/EnemyData.EnemyData'"));
 	static auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(
-			TEXT("StaticMesh'/Game/Enemy/Meshes/enemy_ufoPurple.enemy_ufoPurple'"));
+			TEXT("StaticMesh'/Game/Enemy/Meshes/enemy_ufoYellow.enemy_ufoYellow'"));
 
 	PrimaryActorTick.bCanEverTick = true;
 	UStaticMeshComponent* Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
