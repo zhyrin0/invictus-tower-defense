@@ -5,6 +5,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "../Grid2D.h"
 #include "Tile/Tile.h"
 #include "Tile/TileData.h"
 #include "LevelData.h"
@@ -63,7 +64,7 @@ FSpawnTowerRequestList ALevelBuilder::BuildLevel(FVector2D Size, const TArray<FT
 ATile* ALevelBuilder::BuildTile(FString Name, FVector2D Position, int32 RotationCount) const
 {
 	ATile* Result = nullptr;
-	FVector Location(Position * 100.0f, 0.0f);
+	FVector Location = FGrid2D::GridToGlobal(Position);
 	FRotator Rotation(0.0f, 90.0f * RotationCount, 0.0f);
 	TArray<UStaticMesh*> Meshes;
 	for (TSoftObjectPtr<UStaticMesh> MeshPtr : TileMap[Name]) {

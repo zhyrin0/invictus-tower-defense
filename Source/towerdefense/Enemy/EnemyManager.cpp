@@ -8,6 +8,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Sound/SoundWave.h"
 
+#include "../Grid2D.h"
 #include "Enemy.h"
 
 AEnemyManager::AEnemyManager()
@@ -47,7 +48,7 @@ void AEnemyManager::BeginLevel(const TArray<FVector2D>& InWaypoints,
 	Waypoints.Empty();
 	Waypoints.Reserve(InWaypoints.Num());
 	for (FVector2D GridPosition : InWaypoints) {
-		Waypoints.Emplace(GridPosition * 100.0f, ZOffset);
+		Waypoints.Emplace(FGrid2D::GridToGlobal(GridPosition) + FGrid2D::EnemyOffset());
 	}
 	EnemiesToSpawn = EnemyCount;
 	EnemiesRemaining = EnemiesToSpawn;

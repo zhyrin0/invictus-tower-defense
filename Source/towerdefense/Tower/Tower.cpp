@@ -8,6 +8,7 @@
 #include "Engine/EngineTypes.h"
 #include "Engine/StaticMesh.h"
 
+#include "../Grid2D.h"
 #include "../Enemy/TargetableMixin.h"
 #include "Projectile/Projectile.h"
 #include "TowerData.h"
@@ -47,9 +48,9 @@ ATower::ATower()
 	Cannon->SetupAttachment(CannonBase);
 	ProjectileSpawn->SetupAttachment(Cannon);
 
-	Middle->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f));
-	Top->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
-	CannonBase->SetRelativeLocation(FVector(0.0f, 0.0f, 130.0f));
+	Middle->SetRelativeLocation(FGrid2D::TowerMiddleOffset());
+	Top->SetRelativeLocation(FGrid2D::TowerTopOffset());
+	CannonBase->SetRelativeLocation(FGrid2D::TowerCannonBaseOffset());
 	ProjectileSpawn->AddLocalOffset(FVector(0.0f, 50.0f, 10.0f));
 
 	PrimaryActorTick.bCanEverTick = true;

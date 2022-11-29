@@ -6,6 +6,7 @@
 #include "Engine/StaticMesh.h"
 #include "Math/UnrealMathUtility.h"
 
+#include "../Grid2D.h"
 #include "EnemyData.h"
 
 AEnemy::AEnemy()
@@ -23,7 +24,7 @@ AEnemy::AEnemy()
 	Mesh->SetCollisionProfileName(FName(TEXT("OverlapAllDynamic")));
 	RootComponent = Mesh;
 	Health = DataAsset.Object->Health;
-	SpeedTilePerSecond = DataAsset.Object->SpeedTilePerSecond * 100.0f;
+	SpeedTilePerSecond = DataAsset.Object->SpeedTilePerSecond;
 }
 
 void AEnemy::BeginPlay()
@@ -37,7 +38,7 @@ void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector Location = GetActorLocation();
-	FVector NewLocation = Location + Direction * SpeedTilePerSecond * DeltaTime;
+	FVector NewLocation = Location + Direction * SpeedTilePerSecond * FGrid2D::GetTileSize() * DeltaTime;
 	NewLocation = FMath::ClosestPointOnSegment(NewLocation, Location, CurrentWaypoint);
 	SetActorLocation(NewLocation);
 	if (NewLocation.Equals(CurrentWaypoint)) {

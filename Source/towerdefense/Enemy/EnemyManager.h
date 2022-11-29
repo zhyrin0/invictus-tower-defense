@@ -53,7 +53,6 @@ protected:
 	FGameEvents::FEnemyCountChanged EnemyCountChanged;
 	FGameEvents::FLastWaypointReached LastWaypointReached;
 
-	static constexpr float ZOffset = 30.0f;
 	TArray<FVector> Waypoints;
 	int32 EnemiesToSpawn;
 	int32 EnemiesRemaining;

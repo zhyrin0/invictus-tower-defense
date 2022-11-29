@@ -7,17 +7,18 @@
 #include "Math/UnrealMathUtility.h"
 #include "Sound/SoundWave.h"
 
+#include "../Grid2D.h"
 #include "Tower.h"
 #include "TowerData.h"
 
 ATowerManager::ATowerManager()
-	: TargetingDelta(0.0f), ZOffset(20)
+	: TargetingDelta(0.0f)
 {
 	static auto DataAsset = ConstructorHelpers::FObjectFinder<UTowerData>(
 			TEXT("TowerData'/Game/Tower/TowerData.TowerData'"));
 
 	PrimaryActorTick.bCanEverTick = true;
-	TargetingRange = DataAsset.Object->AttackRangeInTiles * 100.0f;
+	TargetingRange = DataAsset.Object->AttackRangeInTiles * FGrid2D::GetTileSize();
 	TargetingTimeout = 1.0f / DataAsset.Object->TargetingFrequency;
 }
 
@@ -62,8 +63,7 @@ void ATowerManager::ClearLevel()
 
 void ATowerManager::Spawn(FVector Location)
 {
-	Location.Z += ZOffset;
-	ATower* Tower = GetWorld()->SpawnActor<ATower>(Location, FRotator::ZeroRotator);
+	ATower* Tower = GetWorld()->SpawnActor<ATower>(Location + FGrid2D::TowerOffset(), FRotator::ZeroRotator);
 	Tower->Attacked.BindUObject(this, &ATowerManager::OnTowerAttacked);
 	Towers.Add(Tower);
 	PlaceAudio->Play();

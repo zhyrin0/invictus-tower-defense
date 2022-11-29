@@ -10,6 +10,7 @@
 #include "Level/LevelData.h"
 #include "Tower/SpawnTowerRequestMixin.h"
 #include "Tower/TowerManager.h"
+#include "Grid2D.h"
 
 
 ATowerDefenseGameState::ATowerDefenseGameState()
@@ -83,8 +84,8 @@ void ATowerDefenseGameState::BeginLevel(ULevelData* Level) const
 	EnemyManager->BeginLevel(Level->Waypoints, Level->EnemyCount,
 							 Level->EnemySpawnDelay, Level->EnemySpawnCooldown);
 	LevelChanged.ExecuteIfBound(CurrentLevel);
-	CameraPawn->SetActorLocation(FVector(Level->Size / 2.0f * 100.0f, 0.0f));
-	CameraPawn->SetActorRotation(FRotator(0.0f, -90.0f, 0.0f));
+	CameraPawn->SetActorLocation(FVector(Level->Size / 2.0f * FGrid2D::GetTileSize(), 0.0f));
+	CameraPawn->SetActorRotation(FRotator(0.0f, FGrid2D::CAMERA_YAW, 0.0f));
 	CameraPawn->SetStartingCameraOffset(FMath::Max(Level->Size.X, Level->Size.Y) * 225.0f);
 }
 
