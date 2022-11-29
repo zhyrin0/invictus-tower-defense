@@ -23,6 +23,7 @@ ATowerManager::ATowerManager()
 
 void ATowerManager::BeginPlay()
 {
+	Super::BeginPlay();
 	FString PlaceAudioReference = TEXT("SoundWave'/Game/Tower/SFX/qubodup-DoorClose03.qubodup-DoorClose03'");
 	FString FireAudioReference = TEXT("SoundWave'/Game/Tower/SFX/cannon_fire.cannon_fire'");
 	USoundWave* PlaceAudioAsset = LoadObject<USoundWave>(nullptr, *PlaceAudioReference, nullptr, LOAD_None);
@@ -33,6 +34,7 @@ void ATowerManager::BeginPlay()
 
 void ATowerManager::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	TargetingDelta += DeltaTime;
 	if (TargetingDelta >= TargetingTimeout) {
 		SelectTargets();
@@ -77,12 +79,14 @@ void ATowerManager::OnTargetSpawned(TScriptInterface<ITargetableMixin> Target)
 {
 	Targets.Emplace(Target);
 	SelectTargets();
+	TargetingDelta = 0.0f;
 }
 
 void ATowerManager::OnTargetDestroyed(TScriptInterface<ITargetableMixin> Target)
 {
 	Targets.Remove(Target);
 	SelectTargets();
+	TargetingDelta = 0.0f;
 }
 
 void ATowerManager::SelectTargets() const
@@ -97,9 +101,10 @@ void ATowerManager::SelectTargets() const
 		}
 		return;
 	}
-	FTargetLocationMap TargetMap = GetTargetMap();
 	for (ATower* Tower : Towers) {
-		Tower->SetTarget(GetNearestTarget(Tower->GetActorLocation(), GetTargetMap()));
+		FVector TowerLocation = Tower->GetActorLocation();
+		TowerLocation.Z = 0.0f;
+		Tower->SetTarget(GetNearestTarget(TowerLocation, GetTargetMap()));
 	}
 }
 
@@ -107,7 +112,9 @@ ATowerManager::FTargetLocationMap ATowerManager::GetTargetMap() const
 {
 	FTargetLocationMap Result;
 	for (TScriptInterface<ITargetableMixin> Target : Targets) {
-		Result.Add(Target, Target->GetTargetLocation());
+		FVector TargetLocation = Target->GetTargetLocation();
+		TargetLocation.Z = 0.0f;
+		Result.Add(Target, TargetLocation);
 	}
 	return Result;
 }
