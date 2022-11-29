@@ -54,7 +54,7 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	TravelDelta += DeltaTime;
-	if (TravelDelta > TravelTime) {
+	if (TravelDelta > TravelTime || !Target) {
 		Destroy();
 		return;
 	}
