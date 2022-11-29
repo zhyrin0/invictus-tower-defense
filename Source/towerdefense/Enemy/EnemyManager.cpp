@@ -2,8 +2,11 @@
 
 #include "EnemyManager.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/Vector2D.h"
+#include "Math/UnrealMathUtility.h"
+#include "Sound/SoundWave.h"
 
 #include "Enemy.h"
 
@@ -16,6 +19,12 @@ AEnemyManager::AEnemyManager()
 void AEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
+	FString DamageAudioReference = TEXT("SoundWave'/Game/Enemy/SFX/qubodupPunch02.qubodupPunch02'");
+	FString DestroyAudioReference = TEXT("SoundWave'/Game/Enemy/SFX/qubodupPunch04.qubodupPunch04'");
+	USoundWave* DamageAudioAsset = LoadObject<USoundWave>(nullptr, *DamageAudioReference, nullptr, LOAD_None);
+	USoundWave* DestroyAudioAsset = LoadObject<USoundWave>(nullptr, *DestroyAudioReference, nullptr, LOAD_None);
+	DamageAudio = UGameplayStatics::CreateSound2D(GetWorld(), DamageAudioAsset, 1.0f, 1.0f, 0.0f, nullptr, false, false);
+	DestroyAudio = UGameplayStatics::CreateSound2D(GetWorld(), DestroyAudioAsset, 1.0f, 1.0f, 0.0f, nullptr, false, false);
 }
 
 void AEnemyManager::ClearLevel()
@@ -72,12 +81,17 @@ ITargetableMixin::FDestroyed& AEnemyManager::GetEnemyReachedLastWaypoint()
 
 void AEnemyManager::Spawn()
 {
+	if (EnemiesToSpawn < 1) {
+		return;
+	}
 	--EnemiesToSpawn;
 	FVector SpawnLocation(Waypoints[0]);
 	AEnemy* Enemy = GetWorld()->SpawnActor<AEnemy>(SpawnLocation, FRotator::ZeroRotator);
 	AEnemy::FRequestNextWaypoint RequestNextWaypoint;
+	AEnemy::FDamageTaken DamageTaken;
 	RequestNextWaypoint.BindUObject(this, &AEnemyManager::OnEnemyRequestNextWaypoint);
-	Enemy->SetDelegate(RequestNextWaypoint);
+	DamageTaken.BindUObject(this, &AEnemyManager::OnEnemyDamaged);
+	Enemy->SetDelegates(RequestNextWaypoint, DamageTaken);
 	Enemy->TargetDestroyed.AddUObject(this, &AEnemyManager::OnEnemyDestroyed);
 
 	EnemySpawned.ExecuteIfBound(Cast<UObject>(Enemy));
@@ -88,7 +102,8 @@ void AEnemyManager::Spawn()
 	}
 }
 
-bool AEnemyManager::OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy, FVector CurrentWaypoint, FVector& OutNextWaypoint)
+bool AEnemyManager::OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy,
+		FVector CurrentWaypoint, FVector& OutNextWaypoint)
 {
 	for (int32 i = 1; i < Waypoints.Num(); ++i) {
 		if (CurrentWaypoint.Equals(Waypoints[i - 1])) {
@@ -101,10 +116,18 @@ bool AEnemyManager::OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin
 	return true;
 }
 
+void AEnemyManager::OnEnemyDamaged()
+{
+	DamageAudio->SetPitchMultiplier(FMath::RandRange(0.85f, 1.15f));
+	DamageAudio->Play();
+}
+
 void AEnemyManager::OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy)
 {
 	--EnemiesRemaining;
 	++EnemiesDestroyed;
 	EnemyDestroyed.Broadcast(Enemy);
 	EnemyCountChanged.Broadcast(EnemiesRemaining, EnemiesDestroyed);
+	DestroyAudio->SetPitchMultiplier(FMath::RandRange(0.85f, 1.15f));
+	DestroyAudio->Play();
 }

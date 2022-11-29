@@ -17,6 +17,7 @@ class TOWERDEFENSE_API AEnemy : public AActor, public ITargetableMixin
 
 public:
 	DECLARE_DELEGATE_RetVal_ThreeParams(bool, FRequestNextWaypoint, TScriptInterface<ITargetableMixin>, FVector, FVector&)
+	DECLARE_DELEGATE(FDamageTaken)
 
 	AEnemy();
 
@@ -24,7 +25,7 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 			AController* EventInstigator, AActor* DamageCauser) override;
 	virtual FVector GetTargetLocation() const override;
-	void SetDelegate(FRequestNextWaypoint& InRequestNextWaypoint);
+	void SetDelegates(FRequestNextWaypoint& InRequestNextWaypoint, FDamageTaken& InDamageTaken);
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,4 +36,5 @@ protected:
 	FVector CurrentWaypoint;
 	FVector Direction;
 	FRequestNextWaypoint RequestNextWaypoint;
+	FDamageTaken DamageTaken;
 };

@@ -15,3 +15,7 @@
 - [Cannon fire](https://opengameart.org/content/cannon-fire)  
 	[Thimras](https://opengameart.org/users/thimras)  
 	License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
+
+- [Punch](https://opengameart.org/content/punch)  
+	[qubodup](https://opengameart.org/users/qubodup)  
+	License: [CC0](https://creativecommons.org/publicdomain/zero/1.0/)

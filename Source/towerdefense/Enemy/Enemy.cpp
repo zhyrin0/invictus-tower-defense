@@ -53,6 +53,7 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent,
 		TargetDestroyed.Broadcast(Cast<UObject>(this));
 		Destroy();
 	}
+	DamageTaken.ExecuteIfBound();
 	return DamageAmount;
 }
 
@@ -61,9 +62,10 @@ FVector AEnemy::GetTargetLocation() const
 	return GetActorLocation();
 }
 
-void AEnemy::SetDelegate(FRequestNextWaypoint& InRequestNextWaypoint)
+void AEnemy::SetDelegates(FRequestNextWaypoint& InRequestNextWaypoint, FDamageTaken& InDamageTaken)
 {
 	RequestNextWaypoint = InRequestNextWaypoint;
+	DamageTaken = InDamageTaken;
 }
 
 void AEnemy::DoRequestNextWaypoint()

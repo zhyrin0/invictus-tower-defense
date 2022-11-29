@@ -15,6 +15,8 @@
 
 #include "EnemyManager.generated.h"
 
+class UAudioComponent;
+
 UCLASS()
 class TOWERDEFENSE_API AEnemyManager : public AActor
 {
@@ -40,7 +42,10 @@ protected:
 	// note: Returns true if last waypoint is reached,
 	// otherwise returns false and writes next waypoint into out parameter.
 	UFUNCTION()
-	bool OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy, FVector CurrentWaypoint, FVector& OutNextWaypoint);
+	bool OnEnemyRequestNextWaypoint(TScriptInterface<ITargetableMixin> Enemy,
+			FVector CurrentWaypoint, FVector& OutNextWaypoint);
+	UFUNCTION()
+	void OnEnemyDamaged();
 	UFUNCTION()
 	void OnEnemyDestroyed(TScriptInterface<ITargetableMixin> Enemy);
 
@@ -57,4 +62,8 @@ protected:
 	int32 EnemiesDestroyed;
 	FTimerHandle SpawnTimer;
 	FTimerDelegate SpawnTimerTimeout;
+	UPROPERTY()
+	UAudioComponent* DamageAudio;
+	UPROPERTY()
+	UAudioComponent* DestroyAudio;
 };
